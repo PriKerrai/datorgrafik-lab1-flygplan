@@ -26,10 +26,11 @@ namespace GrafikTest
         {
             view = Matrix.CreateLookAt(pos, target, up);
 
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 
-                (float)Game.Window.ClientBounds.Width / 
-                (float)Game.Window.ClientBounds.Height,
-                1, 100);
+            projection = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, 
+                (float)Game.Window.ClientBounds.Width / (float)Game.Window.ClientBounds.Height,
+                1, 
+                100);
 
             // TODO: Construct any child components here
         }
