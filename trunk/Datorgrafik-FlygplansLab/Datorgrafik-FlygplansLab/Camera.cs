@@ -29,7 +29,7 @@ namespace GrafikTest
             projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 
                 (float)Game.Window.ClientBounds.Width / (float)Game.Window.ClientBounds.Height,
-                1, 
+                1,
                 100);
 
             // TODO: Construct any child components here
