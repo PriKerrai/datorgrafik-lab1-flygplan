@@ -102,17 +102,36 @@ namespace GrafikTest
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             KeyboardState keyboardState = Keyboard.GetState();
+            // move left
             if (keyboardState.IsKeyDown(Keys.A))
                 worldTranslation *= Matrix.CreateTranslation(-.005f, 0, 0);
+            // move right
             if (keyboardState.IsKeyDown(Keys.D))
                 worldTranslation *= Matrix.CreateTranslation(.005f, 0, 0);
+            // move up
+            if (keyboardState.IsKeyDown(Keys.W))
+                worldTranslation *= Matrix.CreateTranslation(0, .005f, 0);
+            // move down
+            if (keyboardState.IsKeyDown(Keys.S))
+                worldTranslation *= Matrix.CreateTranslation(0, -.005f, 0);
+            // yaw left
             if(keyboardState.IsKeyDown(Keys.Q)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / .002f, 0, 0);
+            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 60, 0, 0);
             }
+            // yaw right
             if(keyboardState.IsKeyDown(Keys.E)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -.002f, 0, 0);
+            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 60, 0, 0);
             }
-            // TODO: Add your update logic here
+            // pith up
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / 60, 0);
+            }
+            // pith down
+            if (keyboardState.IsKeyDown(Keys.F))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / 60, 0);
+            }
 
             base.Update(gameTime);
         }
