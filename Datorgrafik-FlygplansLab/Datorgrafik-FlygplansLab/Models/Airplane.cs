@@ -17,7 +17,10 @@ namespace GrafikTest
         public void InitializeVertices()
         {
             //Initialize vertices
-            vertices = new VertexPositionColor[36];
+            vertices = new VertexPositionColor[3];
+            vertices[0] = new VertexPositionColor(new Vector3(0, 1, -10), Color.Red);
+            vertices[1] = new VertexPositionColor(new Vector3(1, -1, 0), Color.Green);
+            vertices[2] = new VertexPositionColor(new Vector3(-1, -1, 0), Color.Blue);
 
         }
 

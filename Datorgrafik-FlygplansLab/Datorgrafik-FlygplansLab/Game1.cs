@@ -20,8 +20,7 @@ namespace GrafikTest
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
- 
-        public int[] indices;
+        VertexBuffer vertexBuffer;
         BasicEffect effect;
 
         Matrix worldTranslation = Matrix.Identity;
@@ -68,6 +67,10 @@ namespace GrafikTest
 
             airplane.InitializeIndices();
             airplane.InitializeVertices();
+
+            // Set vertex data in VertexBuffer
+            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.vertices.Length, BufferUsage.None);
+            vertexBuffer.SetData(airplane.vertices);
             
             //Initialize the BasicEffect
             effect = new BasicEffect(GraphicsDevice);
@@ -116,20 +119,19 @@ namespace GrafikTest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            effect.World = camera.view;
+            effect.World = Matrix.Identity;
             effect.View = camera.view;
             effect.Projection = camera.projection;
             effect.VertexColorEnabled = true;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
-                //Saknas något för utritning
                 pass.Apply();
-
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, airplane.vertices, 0, 1);
             }
 
             base.Draw(gameTime);
