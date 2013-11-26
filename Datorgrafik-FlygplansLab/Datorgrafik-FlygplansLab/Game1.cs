@@ -26,7 +26,7 @@ namespace GrafikTest
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
 
-        RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.None, FillMode = FillMode.Solid };
+        RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
         public Game1()
         {
@@ -71,7 +71,12 @@ namespace GrafikTest
             // Set vertex data in VertexBuffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.vertices.Length, BufferUsage.None);
             vertexBuffer.SetData(airplane.vertices);
-            
+
+            //---
+            GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
+            //---
+
+
             //Initialize the BasicEffect
             effect = new BasicEffect(GraphicsDevice);
             // TODO: use this.Content to load your game content here
@@ -98,14 +103,14 @@ namespace GrafikTest
                 this.Exit();
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.A))
-                worldTranslation *= Matrix.CreateTranslation(-.05f, 0, 0);
+                worldTranslation *= Matrix.CreateTranslation(-.005f, 0, 0);
             if (keyboardState.IsKeyDown(Keys.D))
-                worldTranslation *= Matrix.CreateTranslation(.05f, 0, 0);
+                worldTranslation *= Matrix.CreateTranslation(.005f, 0, 0);
             if(keyboardState.IsKeyDown(Keys.Q)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 60, 0, 0);
+            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / .002f, 0, 0);
             }
             if(keyboardState.IsKeyDown(Keys.E)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -60, 0, 0);
+            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -.002f, 0, 0);
             }
             // TODO: Add your update logic here
 
@@ -123,7 +128,7 @@ namespace GrafikTest
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            effect.World = Matrix.Identity;
+            effect.World = worldRotation * worldTranslation;
             effect.View = camera.view;
             effect.Projection = camera.projection;
             effect.VertexColorEnabled = true;
@@ -131,7 +136,7 @@ namespace GrafikTest
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, airplane.vertices, 0, 1);
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, airplane.vertices, 0, 98);
             }
 
             base.Draw(gameTime);
