@@ -20,7 +20,7 @@ namespace Datorgrafik_FlygplansLab.Models
 
             Color colorNose = Color.White;
 
-            // left side
+            // left facing -----------
 
             // nose
             vertices[0] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
@@ -32,22 +32,63 @@ namespace Datorgrafik_FlygplansLab.Models
             vertices[4] = new VertexPositionColor(new Vector3(6, 1, 0), Color.Black);
             vertices[5] = new VertexPositionColor(new Vector3(-2, -1, 2), Color.Black);
             
-            // B - nose right
+            // rear wing
             vertices[6] = new VertexPositionColor(new Vector3(6, 3, 0), Color.Gray);
             vertices[7] = new VertexPositionColor(new Vector3(6, 1, 0), Color.Gray);
             vertices[8] = new VertexPositionColor(new Vector3(2, 1, 0), Color.Gray);
 
-            // C - nose top left
 
+            // right facing -----------
 
-            // D - nose top right
+            // nose
+            vertices[9] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
+            vertices[10] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            vertices[11] = new VertexPositionColor(new Vector3(-2, 1, 0), colorNose);
 
+            // body
+            vertices[12] = new VertexPositionColor(new Vector3(6, 1, 0), Color.Black);
+            vertices[13] = new VertexPositionColor(new Vector3(-2, 1, 0), Color.Black);
+            vertices[14] = new VertexPositionColor(new Vector3(-2, -1, -2), Color.Black);
 
-            // E - nose bot left
+            // rear wing
+            vertices[15] = new VertexPositionColor(new Vector3(6, 1, 0), Color.Gray);
+            vertices[16] = new VertexPositionColor(new Vector3(6, 3, 0), Color.Gray);
+            vertices[17] = new VertexPositionColor(new Vector3(2, 1, 0), Color.Gray);
 
+            // bottom facing -----------
 
-            // F - nose bot right
+            // nose
+            vertices[18] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
+            vertices[19] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            vertices[20] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
 
+            // body
+            vertices[21] = new VertexPositionColor(new Vector3(-2, -1, 2), Color.Black);
+            vertices[22] = new VertexPositionColor(new Vector3(6, 1, 0), Color.Black);
+            vertices[23] = new VertexPositionColor(new Vector3(-2, -1, -2), Color.Black);
+
+            // Wing left
+            vertices[24] = new VertexPositionColor(new Vector3(1, 0, 12), Color.Gray);
+            vertices[25] = new VertexPositionColor(new Vector3(1, 0, 0), Color.Gray);
+            vertices[26] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), Color.Gray);
+
+            // Wing right
+            vertices[27] = new VertexPositionColor(new Vector3(1, 0, 0), Color.Gray);
+            vertices[28] = new VertexPositionColor(new Vector3(1, 0, -12), Color.Gray);
+            vertices[29] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), Color.Gray);
+            
+
+            // top facing -----------
+
+            // wing left
+            vertices[30] = new VertexPositionColor(new Vector3(1, 0, 0), Color.Gray);
+            vertices[31] = new VertexPositionColor(new Vector3(1, 0, 12), Color.Gray);
+            vertices[32] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), Color.Gray);
+
+            // Wing right
+            vertices[33] = new VertexPositionColor(new Vector3(1, 0, -12), Color.Gray);
+            vertices[34] = new VertexPositionColor(new Vector3(1, 0, 0), Color.Gray);
+            vertices[35] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), Color.Gray);
 
             #region helpstuffz
             

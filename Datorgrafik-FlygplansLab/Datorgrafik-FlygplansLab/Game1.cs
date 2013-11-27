@@ -59,7 +59,7 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(0, 0, 9), Vector3.Zero, Vector3.Up);
+            camera = new Camera(this, new Vector3(0, 0, 20), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             base.Initialize();
         }
@@ -169,7 +169,7 @@ namespace Datorgrafik_FlygplansLab
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.vertices, 0, 3);
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.vertices, 0, 18);
             }
 
             base.Draw(gameTime);
