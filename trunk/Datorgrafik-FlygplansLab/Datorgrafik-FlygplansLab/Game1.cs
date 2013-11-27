@@ -8,8 +8,9 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Datorgrafik_FlygplansLab.Models;
 
-namespace GrafikTest
+namespace Datorgrafik_FlygplansLab
 {
     /// <summary>
     /// This is the main type for your game
@@ -20,24 +21,31 @@ namespace GrafikTest
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
+        
         VertexBuffer vertexBuffer;
+        
+
         BasicEffect effect;
 
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
 
-        RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
+        RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.None, FillMode = FillMode.Solid };
 
         public Game1()
         {
 
             graphics = new GraphicsDeviceManager(this);
             airplane = new Airplane();
-
+            airplane.InitializeVertices();
+  
             //MAX FPS SPEED WROOM
             this.IsFixedTimeStep = false;
             graphics.SynchronizeWithVerticalRetrace = false;
-            
+
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1024;
+
             Components.Add(new FPS(this));
             Content.RootDirectory = "Content";
         }
@@ -51,7 +59,7 @@ namespace GrafikTest
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(0, 0, 5), Vector3.Zero, Vector3.Up);
+            camera = new Camera(this, new Vector3(20, 0, 30), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             base.Initialize();
         }
@@ -65,12 +73,12 @@ namespace GrafikTest
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            airplane.InitializeIndices();
-            airplane.InitializeVertices();
-
             // Set vertex data in VertexBuffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.vertices.Length, BufferUsage.None);
-            vertexBuffer.SetData(airplane.vertices);
+            vertexBuffer.SetData<VertexPositionColor>(airplane.vertices);
+
+            //indexBuffer = new IndexBuffer(GraphicsDevice, IndexElementSize.SixteenBits, airplane.indices.Length, BufferUsage.WriteOnly);
+            //indexBuffer.SetData<short>(airplane.indices);
 
             //---
             GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
@@ -98,41 +106,6 @@ namespace GrafikTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-            KeyboardState keyboardState = Keyboard.GetState();
-            // move left
-            if (keyboardState.IsKeyDown(Keys.A))
-                worldTranslation *= Matrix.CreateTranslation(-.005f, 0, 0);
-            // move right
-            if (keyboardState.IsKeyDown(Keys.D))
-                worldTranslation *= Matrix.CreateTranslation(.005f, 0, 0);
-            // move up
-            if (keyboardState.IsKeyDown(Keys.W))
-                worldTranslation *= Matrix.CreateTranslation(0, .005f, 0);
-            // move down
-            if (keyboardState.IsKeyDown(Keys.S))
-                worldTranslation *= Matrix.CreateTranslation(0, -.005f, 0);
-            // yaw left
-            if(keyboardState.IsKeyDown(Keys.Q)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 1, 0, 0);
-            }
-            // yaw right
-            if(keyboardState.IsKeyDown(Keys.E)) {
-            worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -1, 0, 0);
-            }
-            // pith up
-            if (keyboardState.IsKeyDown(Keys.R))
-            {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / 1, 0);
-            }
-            // pith down
-            if (keyboardState.IsKeyDown(Keys.F))
-            {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / -1, 0);
-            }
-
             base.Update(gameTime);
         }
 
@@ -144,6 +117,7 @@ namespace GrafikTest
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            //GraphicsDevice.Indices = indexBuffer;
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
