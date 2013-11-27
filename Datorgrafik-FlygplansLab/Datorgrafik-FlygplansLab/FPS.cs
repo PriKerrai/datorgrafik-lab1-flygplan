@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace GrafikTest
+namespace Datorgrafik_FlygplansLab
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.

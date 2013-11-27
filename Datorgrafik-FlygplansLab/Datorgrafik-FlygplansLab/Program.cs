@@ -8,9 +8,8 @@
 #endregion
 
 using System;
-using GrafikTest;
 
-namespace UseBasicEffectWindows
+namespace Datorgrafik_FlygplansLab
 {
 #if WINDOWS || XBOX
     static class Program
