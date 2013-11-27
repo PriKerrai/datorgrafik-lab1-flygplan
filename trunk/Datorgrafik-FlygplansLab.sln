@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datorgrafik-FlygplansLab", "Datorgrafik-FlygplansLab\Datorgrafik-FlygplansLab\Datorgrafik-FlygplansLab.csproj", "{31582F28-EB90-4B26-972D-F702AECDE46C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Datorgrafik-FlygplansLabContent", "Datorgrafik-FlygplansLab\Datorgrafik-FlygplansLabContent\Datorgrafik-FlygplansLabContent.contentproj", "{AE69644B-2101-4E05-96B1-37627E1226F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datorgrafik-FlygplansLabContent", "Datorgrafik-FlygplansLab\Datorgrafik-FlygplansLabContent\Datorgrafik-FlygplansLabContent.contentproj", "{AE69644B-2101-4E05-96B1-37627E1226F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,8 +20,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal

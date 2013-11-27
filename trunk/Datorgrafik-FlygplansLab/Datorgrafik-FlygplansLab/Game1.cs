@@ -21,7 +21,6 @@ namespace Datorgrafik_FlygplansLab
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
-        
         VertexBuffer vertexBuffer;
         
 
@@ -30,7 +29,7 @@ namespace Datorgrafik_FlygplansLab
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
 
-        RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.None, FillMode = FillMode.Solid };
+        //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
         public Game1()
         {
@@ -38,6 +37,7 @@ namespace Datorgrafik_FlygplansLab
             graphics = new GraphicsDeviceManager(this);
             airplane = new Airplane();
             airplane.InitializeVertices();
+            airplane.InitializeIndices();
   
             //MAX FPS SPEED WROOM
             this.IsFixedTimeStep = false;
@@ -59,7 +59,7 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(20, 0, 30), Vector3.Zero, Vector3.Up);
+            camera = new Camera(this, new Vector3(0, 0, 9), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             base.Initialize();
         }
@@ -77,16 +77,22 @@ namespace Datorgrafik_FlygplansLab
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.vertices.Length, BufferUsage.None);
             vertexBuffer.SetData<VertexPositionColor>(airplane.vertices);
 
-            //indexBuffer = new IndexBuffer(GraphicsDevice, IndexElementSize.SixteenBits, airplane.indices.Length, BufferUsage.WriteOnly);
+            //indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), airplane.indices.Length, BufferUsage.WriteOnly);
             //indexBuffer.SetData<short>(airplane.indices);
 
+            
             //---
-            GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
+            //GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
             //---
 
 
             //Initialize the BasicEffect
             effect = new BasicEffect(GraphicsDevice);
+
+            // Set cullmode to none
+            RasterizerState rs = new RasterizerState();
+            rs.CullMode = CullMode.None;
+            GraphicsDevice.RasterizerState = rs;
             // TODO: use this.Content to load your game content here
         }
 
@@ -106,6 +112,40 @@ namespace Datorgrafik_FlygplansLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
+            // move left
+            if (keyboardState.IsKeyDown(Keys.A))
+                worldTranslation *= Matrix.CreateTranslation(-.005f, 0, 0);
+            // move right
+            if (keyboardState.IsKeyDown(Keys.D))
+                worldTranslation *= Matrix.CreateTranslation(.005f, 0, 0);
+            // move up
+            if (keyboardState.IsKeyDown(Keys.W))
+                worldTranslation *= Matrix.CreateTranslation(0, .005f, 0);
+            // move down
+            if (keyboardState.IsKeyDown(Keys.S))
+                worldTranslation *= Matrix.CreateTranslation(0, -.005f, 0);
+            // yaw left
+            if (keyboardState.IsKeyDown(Keys.Q))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 500, 0, 0);
+            }
+            // yaw right
+            if (keyboardState.IsKeyDown(Keys.E))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -500, 0, 0);
+            }
+            // pith up
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / 500, 0);
+            }
+            // pith down
+            if (keyboardState.IsKeyDown(Keys.F))
+            {
+                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / -500, 0);
+            }
+
             base.Update(gameTime);
         }
 
@@ -129,7 +169,7 @@ namespace Datorgrafik_FlygplansLab
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, airplane.vertices, 0, 98);
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.vertices, 0, 3);
             }
 
             base.Draw(gameTime);
