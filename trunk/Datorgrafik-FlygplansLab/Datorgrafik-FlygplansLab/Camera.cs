@@ -29,13 +29,21 @@ namespace Datorgrafik_FlygplansLab
         public Vector3 Position 
         { 
             get { return position; } 
-            set { position = value; UpdateLookAt(); }
+            set
+            { 
+                position = value; 
+                UpdateLookAt(); 
+            }
         }
         
         public float Rotation 
         {
             get { return rotation; }
-            set { rotation = value; UpdateLookAt(); }
+            set
+            {
+                rotation = value; 
+                UpdateLookAt(); 
+            }
         }
         
         public Matrix Projection 
@@ -46,28 +54,25 @@ namespace Datorgrafik_FlygplansLab
 
         public Matrix View 
         {
-            get {
+            get 
+            {
                 if (needViewResync)
-                    cachedViewMatrix = Matrix.CreateLookAt(
-                    Position,
-                    lookAt,
-                    Vector3.Up);
+                {
+                    cachedViewMatrix = Matrix.CreateLookAt(Position, lookAt, Vector3.Up);
+                }
                 return cachedViewMatrix;
             }
         }
 
-        public Camera(
-            Vector3 position,
-            float rotation,
-            float aspectRatio,
-            float nearClip,
-            float farClip)
+        public Camera(Vector3 position, float rotation, float aspectRatio, float nearClip, float farClip)
         {
             Projection = Matrix.CreatePerspectiveFieldOfView(
-            MathHelper.PiOver4,
-            aspectRatio,
-            nearClip,
-            farClip);
+                MathHelper.PiOver4,
+                aspectRatio,
+                nearClip,
+                farClip
+                );
+
             MoveTo(position, rotation);
         }
 
@@ -81,9 +86,7 @@ namespace Datorgrafik_FlygplansLab
         private void UpdateLookAt()
         {
             Matrix rotationMatrix = Matrix.CreateRotationY(rotation);
-            Vector3 lookAtOffset = Vector3.Transform(
-            baseCameraReference,
-            rotationMatrix);
+            Vector3 lookAtOffset = Vector3.Transform(baseCameraReference, rotationMatrix);
             lookAt = position + lookAtOffset;
             needViewResync = true;
         }
@@ -95,6 +98,7 @@ namespace Datorgrafik_FlygplansLab
             forward = Vector3.Transform(forward, rotate);
             return (position + forward);
         }
+
         public void MoveForward(float scale)
         {
             MoveTo(PreviewMove(scale), rotation);

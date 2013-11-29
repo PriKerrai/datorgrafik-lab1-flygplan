@@ -18,7 +18,6 @@ namespace Datorgrafik_FlygplansLab
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        GraphicsDevice device;
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
@@ -171,8 +170,6 @@ namespace Datorgrafik_FlygplansLab
                 GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.airplaneVertices, 0, 18);
                 houses.Draw(camera, effect);
             }
-
-            
 
             base.Draw(gameTime);
         }
