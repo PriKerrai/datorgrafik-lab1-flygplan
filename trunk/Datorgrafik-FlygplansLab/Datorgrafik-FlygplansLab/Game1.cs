@@ -18,16 +18,20 @@ namespace Datorgrafik_FlygplansLab
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
+        GraphicsDevice device;
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
         Ground ground;
-        VertexBuffer vertexBuffer, floorBuffer;
+        VertexBuffer vertexBuffer;
 
         BasicEffect effect;
 
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
+
+        float moveScale = 1.5f;
+        float rotateScale = MathHelper.PiOver2;
 
         //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
@@ -36,9 +40,7 @@ namespace Datorgrafik_FlygplansLab
 
             graphics = new GraphicsDeviceManager(this);
             airplane = new Airplane();
-            ground = new Ground();
 
-            ground.BuildFloorBuffer();
             airplane.InitializeVertices();
 
             //MAX FPS SPEED WROOM
@@ -61,8 +63,14 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(1, 1, 50), Vector3.Zero, Vector3.Up);
-            Components.Add(camera);
+            camera = new Camera(
+                new Vector3(0.5f, 0.5f, 0.5f),
+                0,
+                GraphicsDevice.Viewport.AspectRatio,
+                0.05f,
+                100f);
+            effect = new BasicEffect(GraphicsDevice);
+            ground = new Ground(GraphicsDevice);
             base.Initialize();
         }
 
@@ -78,17 +86,6 @@ namespace Datorgrafik_FlygplansLab
             // Set vertex data in VertexBuffer
             vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
             vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
-
-            floorBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), ground.groundVertices.Count, BufferUsage.WriteOnly);
-            floorBuffer.SetData<VertexPositionColor>(ground.groundVertices.ToArray());
-
-            //---
-            //GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
-            //---
-
-
-            //Initialize the BasicEffect
-            effect = new BasicEffect(GraphicsDevice);
 
             // Set cullmode to none
             RasterizerState rs = new RasterizerState();
@@ -113,40 +110,40 @@ namespace Datorgrafik_FlygplansLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            // move left
-            if (keyboardState.IsKeyDown(Keys.A))
-                worldTranslation *= Matrix.CreateTranslation(-.005f, 0, 0);
-            // move right
-            if (keyboardState.IsKeyDown(Keys.D))
-                worldTranslation *= Matrix.CreateTranslation(.005f, 0, 0);
-            // move up
-            if (keyboardState.IsKeyDown(Keys.W))
-                worldTranslation *= Matrix.CreateTranslation(0, .005f, 0);
-            // move down
-            if (keyboardState.IsKeyDown(Keys.S))
-                worldTranslation *= Matrix.CreateTranslation(0, -.005f, 0);
-            // yaw left
-            if (keyboardState.IsKeyDown(Keys.Q))
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            KeyboardState keyState = Keyboard.GetState();
+            float moveAmount = 0;
+            if (keyState.IsKeyDown(Keys.D))
             {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / 500, 0, 0);
+                camera.Rotation = MathHelper.WrapAngle(
+                camera.Rotation - (rotateScale * elapsed));
             }
-            // yaw right
-            if (keyboardState.IsKeyDown(Keys.E))
+            if (keyState.IsKeyDown(Keys.A))
             {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(MathHelper.PiOver4 / -500, 0, 0);
+                camera.Rotation = MathHelper.WrapAngle(
+                camera.Rotation + (rotateScale * elapsed));
             }
-            // pith up
-            if (keyboardState.IsKeyDown(Keys.R))
+            if (keyState.IsKeyDown(Keys.W))
             {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / 500, 0);
+                //camera.MoveForward(moveScale * elapsed);
+                moveAmount = moveScale * elapsed;
             }
-            // pith down
-            if (keyboardState.IsKeyDown(Keys.F))
+            if (keyState.IsKeyDown(Keys.S))
             {
-                worldRotation *= Matrix.CreateFromYawPitchRoll(0, MathHelper.PiOver4 / -500, 0);
+                //camera.MoveForward(-moveScale * elapsed);
+                moveAmount = -moveScale * elapsed;
             }
-
+            if (moveAmount != 0)
+            {
+                Vector3 newLocation = camera.PreviewMove(moveAmount);
+                bool moveOk = true;
+                if (newLocation.X < 0 || newLocation.X > Ground.mazeWidth)
+                    moveOk = false;
+                if (newLocation.Z < 0 || newLocation.Z > Ground.mazeHeight)
+                    moveOk = false;
+                if (moveOk)
+                    camera.MoveForward(moveAmount);
+            }
             base.Update(gameTime);
         }
 
@@ -158,23 +155,24 @@ namespace Datorgrafik_FlygplansLab
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            GraphicsDevice.SetVertexBuffer(floorBuffer);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             effect.World = worldRotation * worldTranslation;
-            effect.View = camera.view;
-            effect.Projection = camera.projection;
             effect.VertexColorEnabled = true;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, floorBuffer.VertexCount / 3);
+
+                ground.Draw(camera, effect);
                 GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.airplaneVertices, 0, 18);
             }
 
+            
+
             base.Draw(gameTime);
         }
+
     }
     }
