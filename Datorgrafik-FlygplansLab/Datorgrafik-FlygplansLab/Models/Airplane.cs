@@ -247,6 +247,22 @@ namespace Datorgrafik_FlygplansLab.Models
             //vertices[35] = new VertexPositionColor(new Vector3(0f, 0.5f, -4f), bodyColor);
             #endregion
         }
+
+        private Random rand = new Random();
+
+        //public void PositionCube(Vector3 playerLocation, float minDistance) {
+        //Vector3 newLocation;
+        //do
+        //{
+        //    newLocation = new Vector3(
+        //    rand.Next(0, Ground.mazeWidth) + 0.5f,
+        //    0.5f,
+        //    rand.Next(0, Ground.mazeHeight) + 0.5f);
+        //}
+        //while (
+        //    Vector3.Distance(playerLocation, newLocation) < minDistance);
+        //    location = newLocation;
+        //}
         
     }
 }

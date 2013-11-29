@@ -15,118 +15,89 @@ namespace Datorgrafik_FlygplansLab
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Camera : Microsoft.Xna.Framework.GameComponent
+    public class Camera
     {
-        Matrix worldTranslation = Matrix.Identity;
-        Matrix worldRotation = Matrix.Identity;
-        public Matrix view { get; protected set; }
-        public Matrix projection { get; protected set; }
-  
-        //Camera vectors
-        public Vector3 cameraPosition { get; protected set; }
-        Vector3 cameraDirection;
-        Vector3 cameraUp;
-        MouseState prevMouseState;
 
+        private Vector3 position = Vector3.Zero;
+        private float rotation;
+        
+        private Vector3 lookAt;
+        private Vector3 baseCameraReference = new Vector3(0, 0, 1);
+        private bool needViewResync = true;
+        private Matrix cachedViewMatrix;
 
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
-            : base(game)
+        public Vector3 Position 
+        { 
+            get { return position; } 
+            set { position = value; UpdateLookAt(); }
+        }
+        
+        public float Rotation 
         {
-            // Build camera view matrix
-            cameraPosition = pos;
-            cameraDirection = target - pos;
-            cameraDirection.Normalize();
-            cameraUp = up;
-            CreateLookAt();
-
-            projection = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 
-                (float)Game.Window.ClientBounds.Width / (float)Game.Window.ClientBounds.Height,
-                1,
-                100);
-
-            // TODO: Construct any child components here
+            get { return rotation; }
+            set { rotation = value; UpdateLookAt(); }
+        }
+        
+        public Matrix Projection 
+        { 
+            get; 
+            private set; 
         }
 
-        private void CreateLookAt()
+        public Matrix View 
         {
-            view = Matrix.CreateLookAt(cameraPosition,cameraPosition + cameraDirection, cameraUp);
+            get {
+                if (needViewResync)
+                    cachedViewMatrix = Matrix.CreateLookAt(
+                    Position,
+                    lookAt,
+                    Vector3.Up);
+                return cachedViewMatrix;
+            }
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
+        public Camera(
+            Vector3 position,
+            float rotation,
+            float aspectRatio,
+            float nearClip,
+            float farClip)
         {
-            // TODO: Add your initialization code here
-
-            // Set mouse position and do initial get state
-            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2,
-            Game.Window.ClientBounds.Height / 2);
-            prevMouseState = Mouse.GetState();
-
-            base.Initialize();
+            Projection = Matrix.CreatePerspectiveFieldOfView(
+            MathHelper.PiOver4,
+            aspectRatio,
+            nearClip,
+            farClip);
+            MoveTo(position, rotation);
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        private void MoveTo(Vector3 position, float rotation)
         {
-            //// Move forward/backward
-            //if (Keyboard.GetState( ).IsKeyDown(Keys.W))
-            //cameraPosition += cameraDirection * speed;
-            //if (Keyboard.GetState( ).IsKeyDown(Keys.S))
-            //cameraPosition -= cameraDirection * speed;
-            //// Move side to side
-            //if (Keyboard.GetState( ).IsKeyDown(Keys.A))
-            //cameraPosition += Vector3.Cross(cameraUp, cameraDirection) * speed;
-            //if (Keyboard.GetState( ).IsKeyDown(Keys.D))
-            //cameraPosition -= Vector3.Cross(cameraUp, cameraDirection) * speed;
-            
-            //// Yaw rotation
-            //cameraDirection = Vector3.Transform(cameraDirection,
-            //Matrix.CreateFromAxisAngle(
-            //    cameraUp, 
-            //    (-MathHelper.PiOver4 / 350) * (Mouse.GetState( ).X - prevMouseState.X)
-            //    ));
-            
-            
-            //// Reset prevMouseState
-            //prevMouseState = Mouse.GetState( );
-            //// Roll rotation
-            //if (Mouse.GetState( ).LeftButton == ButtonState.Pressed)
-            //{
-            //cameraUp = Vector3.Transform(cameraUp,
-            //Matrix.CreateFromAxisAngle(cameraDirection,
-            //MathHelper.PiOver4 / 400));
-            //}
-            //if (Mouse.GetState( ).RightButton == ButtonState.Pressed)
-            //{
-            //cameraUp = Vector3.Transform(cameraUp,
-            //Matrix.CreateFromAxisAngle(cameraDirection,
-            //-MathHelper.PiOver4 / 400));
-            //}
+            this.position = position;
+            this.rotation = rotation;
+            UpdateLookAt();
+        }
 
-            //// Pitch rotation
-            //cameraDirection = Vector3.Transform(
-            //    cameraDirection,
-            //    Matrix.CreateFromAxisAngle(
-            //        Vector3.Cross(cameraUp, cameraDirection),
-            //        (MathHelper.PiOver4 / 5) * (Mouse.GetState().Y - prevMouseState.Y)
-            //        ));
+        private void UpdateLookAt()
+        {
+            Matrix rotationMatrix = Matrix.CreateRotationY(rotation);
+            Vector3 lookAtOffset = Vector3.Transform(
+            baseCameraReference,
+            rotationMatrix);
+            lookAt = position + lookAtOffset;
+            needViewResync = true;
+        }
 
-            //cameraUp = Vector3.Transform(
-            //    cameraUp,
-            //    Matrix.CreateFromAxisAngle(
-            //        Vector3.Cross(cameraUp, cameraDirection),
-            //        (MathHelper.PiOver4 / 5) * (Mouse.GetState().Y - prevMouseState.Y)
-            //        ));
-
-            CreateLookAt();
-            base.Update(gameTime);
+        public Vector3 PreviewMove(float scale)
+        {
+            Matrix rotate = Matrix.CreateRotationY(rotation);
+            Vector3 forward = new Vector3(0, 0, scale);
+            forward = Vector3.Transform(forward, rotate);
+            return (position + forward);
+        }
+        public void MoveForward(float scale)
+        {
+            MoveTo(PreviewMove(scale), rotation);
         }
     }
 }
