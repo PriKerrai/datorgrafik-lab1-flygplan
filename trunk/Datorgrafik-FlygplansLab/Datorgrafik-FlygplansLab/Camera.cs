@@ -21,8 +21,7 @@ namespace Datorgrafik_FlygplansLab
         Matrix worldRotation = Matrix.Identity;
         public Matrix view { get; protected set; }
         public Matrix projection { get; protected set; }
-        float speed = 0.005f;
-
+  
         //Camera vectors
         public Vector3 cameraPosition { get; protected set; }
         Vector3 cameraDirection;
