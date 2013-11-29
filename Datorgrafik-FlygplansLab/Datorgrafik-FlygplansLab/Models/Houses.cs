@@ -13,11 +13,11 @@ namespace Datorgrafik_FlygplansLab.Models
         VertexBuffer houseBuffer;
 
         private const int numberOfHouseHeights = 3;
-        int[] houseHeights = new int[numberOfHouseHeights] { 2, 4, 76 };
+        int[] houseHeights = new int[numberOfHouseHeights] { 2, 4, 6 };
         int[,] housePositions;
         List<VertexPositionColor> housesVertices = new List<VertexPositionColor>();
         private const int numberOfHouseColors = 3;
-        Color[] houseColors = new Color[numberOfHouseColors] { Color.Goldenrod, Color.Gainsboro, Color.Firebrick };
+        Color[] houseColors = new Color[numberOfHouseColors] { Color.Sienna, Color.Firebrick, Color.MediumAquamarine };
         Random random = new Random();
 
         public Houses(GraphicsDevice device)
@@ -49,23 +49,52 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             List<VertexPositionColor> vList = new List<VertexPositionColor>();
 
+            int houseHeight = houseHeights[random.Next(0, numberOfHouseHeights)];
+
             // roof
-            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 0 + zOffset), houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 0 + zOffset), houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 1 + zOffset), houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 0 + zOffset), houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 1 + zOffset), houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, houseHeights[random.Next(0, numberOfHouseHeights)], 1 + zOffset), houseColor));
-
-            // north wall
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    1 + zOffset),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    1 + zOffset),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    1 + zOffset),   houseColor));
 
 
-            // east wall
+            // front wall
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset + 1),   houseColor));
 
-            // south wall
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),   houseColor));
 
-            // west wall
+            // back wall
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
 
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),       houseColor));
+
+            // left wall
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
+
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
+
+            // right wall
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),      houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),  houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),  houseColor));
+
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),  houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),      houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),      houseColor));
 
             return vList;
         }
