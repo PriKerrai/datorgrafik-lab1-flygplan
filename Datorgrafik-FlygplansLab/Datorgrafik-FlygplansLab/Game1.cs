@@ -21,8 +21,8 @@ namespace Datorgrafik_FlygplansLab
         SpriteBatch spriteBatch;
         Camera camera;
         Airplane airplane;
-        VertexBuffer vertexBuffer;
-        
+        Ground ground;
+        VertexBuffer vertexBuffer, floorBuffer;
 
         BasicEffect effect;
 
@@ -36,9 +36,11 @@ namespace Datorgrafik_FlygplansLab
 
             graphics = new GraphicsDeviceManager(this);
             airplane = new Airplane();
+            ground = new Ground();
+
+            ground.BuildFloorBuffer();
             airplane.InitializeVertices();
-            airplane.InitializeIndices();
-  
+
             //MAX FPS SPEED WROOM
             this.IsFixedTimeStep = false;
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -59,7 +61,7 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(0, 0, 20), Vector3.Zero, Vector3.Up);
+            camera = new Camera(this, new Vector3(1, 1, 50), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             base.Initialize();
         }
@@ -74,13 +76,12 @@ namespace Datorgrafik_FlygplansLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Set vertex data in VertexBuffer
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.vertices.Length, BufferUsage.None);
-            vertexBuffer.SetData<VertexPositionColor>(airplane.vertices);
+            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
+            vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
 
-            //indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), airplane.indices.Length, BufferUsage.WriteOnly);
-            //indexBuffer.SetData<short>(airplane.indices);
+            floorBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), ground.groundVertices.Count, BufferUsage.WriteOnly);
+            floorBuffer.SetData<VertexPositionColor>(ground.groundVertices.ToArray());
 
-            
             //---
             //GraphicsDevice.RasterizerState = WIREFRAME_RASTERIZER_STATE;
             //---
@@ -157,7 +158,7 @@ namespace Datorgrafik_FlygplansLab
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            //GraphicsDevice.Indices = indexBuffer;
+            GraphicsDevice.SetVertexBuffer(floorBuffer);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -169,10 +170,11 @@ namespace Datorgrafik_FlygplansLab
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.vertices, 0, 18);
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, floorBuffer.VertexCount / 3);
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.airplaneVertices, 0, 18);
             }
 
             base.Draw(gameTime);
         }
     }
-}
+    }
