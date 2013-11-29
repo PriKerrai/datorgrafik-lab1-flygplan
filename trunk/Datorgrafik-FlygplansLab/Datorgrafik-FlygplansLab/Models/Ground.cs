@@ -12,17 +12,15 @@ namespace Datorgrafik_FlygplansLab.Models
         GraphicsDevice device;
         VertexBuffer groundBuffer;
 
-        public const int mazeWidth = 50;
-        public const int mazeHeight = 50;
+        public const int groundWidth = 50;
+        public const int groundHeight = 50;
         Color[] floorColors = new Color[2] { Color.White, Color.Black };
-
-        
 
         public Ground(GraphicsDevice device)
         {
             this.device = device;
             BuildFloorBuffer();
-           }
+        }
 
         public void BuildFloorBuffer()
         {
@@ -30,10 +28,10 @@ namespace Datorgrafik_FlygplansLab.Models
 
             int counter = 0;
 
-            for (int x = 0; x < mazeWidth; x++)
+            for (int x = 0; x < groundWidth; x++)
             {
                 counter++;
-                for (int z = 0; z < mazeHeight; z++)
+                for (int z = 0; z < groundHeight; z++)
                 {
                     counter++;
                     foreach (VertexPositionColor vertex in FloorTile(x, z, floorColors[counter % 2]))
@@ -45,28 +43,19 @@ namespace Datorgrafik_FlygplansLab.Models
 
             groundBuffer = new VertexBuffer(device, typeof(VertexPositionColor), groundVertices.Count, BufferUsage.WriteOnly);
             groundBuffer.SetData<VertexPositionColor>(groundVertices.ToArray());
-            
         }
 
-        private List<VertexPositionColor> FloorTile(
-        int xOffset,
-        int zOffset,
-        Color tileColor)
+        private List<VertexPositionColor> FloorTile(int xOffset, int zOffset, Color tileColor)
         {
-            List<VertexPositionColor> vList =
-                new List<VertexPositionColor>();
-            vList.Add(new VertexPositionColor(
-                new Vector3(0 + xOffset, 0, 0 + zOffset), tileColor));
-            vList.Add(new VertexPositionColor(
-                new Vector3(1 + xOffset, 0, 0 + zOffset), tileColor));
-            vList.Add(new VertexPositionColor(
-                new Vector3(0 + xOffset, 0, 1 + zOffset), tileColor));
-            vList.Add(new VertexPositionColor(
-                new Vector3(1 + xOffset, 0, 0 + zOffset), tileColor));
-            vList.Add(new VertexPositionColor(
-                new Vector3(1 + xOffset, 0, 1 + zOffset), tileColor));
-            vList.Add(new VertexPositionColor(
-                new Vector3(0 + xOffset, 0, 1 + zOffset), tileColor));
+            List<VertexPositionColor> vList = new List<VertexPositionColor>();
+
+            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, 0, 0 + zOffset), tileColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, 0, 0 + zOffset), tileColor));
+            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, 0, 1 + zOffset), tileColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, 0, 0 + zOffset), tileColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, 0, 1 + zOffset), tileColor));
+            vList.Add(new VertexPositionColor(new Vector3(0 + xOffset, 0, 1 + zOffset), tileColor));
+
             return vList;
         }
 
@@ -81,10 +70,7 @@ namespace Datorgrafik_FlygplansLab.Models
             {
                 pass.Apply();
                 device.SetVertexBuffer(groundBuffer);
-                device.DrawPrimitives(
-                PrimitiveType.TriangleList,
-                0,
-                groundBuffer.VertexCount / 3);
+                device.DrawPrimitives(PrimitiveType.TriangleList, 0, groundBuffer.VertexCount / 3);
             }
         }
     }

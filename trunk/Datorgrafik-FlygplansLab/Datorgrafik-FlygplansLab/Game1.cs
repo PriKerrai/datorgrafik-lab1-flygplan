@@ -23,6 +23,7 @@ namespace Datorgrafik_FlygplansLab
         Camera camera;
         Airplane airplane;
         Ground ground;
+        Houses houses;
         VertexBuffer vertexBuffer;
 
         BasicEffect effect;
@@ -71,6 +72,7 @@ namespace Datorgrafik_FlygplansLab
                 100f);
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
+            houses = new Houses(GraphicsDevice);
             base.Initialize();
         }
 
@@ -137,9 +139,9 @@ namespace Datorgrafik_FlygplansLab
             {
                 Vector3 newLocation = camera.PreviewMove(moveAmount);
                 bool moveOk = true;
-                if (newLocation.X < 0 || newLocation.X > Ground.mazeWidth)
+                if (newLocation.X < 0 || newLocation.X > Ground.groundWidth)
                     moveOk = false;
-                if (newLocation.Z < 0 || newLocation.Z > Ground.mazeHeight)
+                if (newLocation.Z < 0 || newLocation.Z > Ground.groundHeight)
                     moveOk = false;
                 if (moveOk)
                     camera.MoveForward(moveAmount);
@@ -167,6 +169,7 @@ namespace Datorgrafik_FlygplansLab
 
                 ground.Draw(camera, effect);
                 GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.airplaneVertices, 0, 18);
+                houses.Draw(camera, effect);
             }
 
             
