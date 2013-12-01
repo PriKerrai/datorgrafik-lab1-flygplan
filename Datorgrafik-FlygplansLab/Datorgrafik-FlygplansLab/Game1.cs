@@ -114,6 +114,7 @@ namespace Datorgrafik_FlygplansLab
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState keyState = Keyboard.GetState();
             float moveAmount = 0;
+
             if (keyState.IsKeyDown(Keys.D))
             {
                 camera.Rotation = MathHelper.WrapAngle(
@@ -145,6 +146,11 @@ namespace Datorgrafik_FlygplansLab
                 if (moveOk)
                     camera.MoveForward(moveAmount);
             }
+
+            // Allows the game to exit
+            if (keyState.IsKeyDown(Keys.Escape))
+                this.Exit();
+
             base.Update(gameTime);
         }
 
