@@ -17,7 +17,7 @@ namespace Datorgrafik_FlygplansLab.Models
         int[,] housePositions;
         List<VertexPositionColor> housesVertices = new List<VertexPositionColor>();
         private const int numberOfHouseColors = 3;
-        Color[] houseColors = new Color[numberOfHouseColors] { Color.Sienna, Color.Firebrick, Color.MediumAquamarine };
+        Color[] houseColors = new Color[numberOfHouseColors] { Color.Sienna, Color.LemonChiffon, Color.MediumAquamarine };
         Random random = new Random();
 
         public Houses(GraphicsDevice device)
@@ -30,19 +30,23 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             housePositions = new int[Ground.groundWidth, Ground.groundHeight];
 
-                for (int x = 0; x < Ground.groundWidth; x++)
-                {
+            for (int x = 0; x < Ground.groundWidth; x++)
+            {
                 for (int z = 0; z < Ground.groundHeight; z++)
                 {
-                    foreach (VertexPositionColor vertex in HouseVertices(x, z, houseColors[random.Next(0, numberOfHouseColors)]))
+                    if (random.Next(0,5) == 0)
                     {
-                        housesVertices.Add(vertex);
+                        foreach (VertexPositionColor vertex in HouseVertices(x, z, houseColors[random.Next(0, numberOfHouseColors)]))
+                        {
+                            housesVertices.Add(vertex);
+                        }
                     }
+                    
                 }
             }
 
-                houseBuffer = new VertexBuffer(device, typeof(VertexPositionColor), housesVertices.Count, BufferUsage.WriteOnly);
-                houseBuffer.SetData<VertexPositionColor>(housesVertices.ToArray());
+            houseBuffer = new VertexBuffer(device, typeof(VertexPositionColor), housesVertices.Count, BufferUsage.WriteOnly);
+            houseBuffer.SetData<VertexPositionColor>(housesVertices.ToArray());
         }
 
         private List<VertexPositionColor> HouseVertices(int xOffset, int zOffset, Color houseColor)
@@ -61,39 +65,39 @@ namespace Datorgrafik_FlygplansLab.Models
 
 
             // front wall
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),   houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),   houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset + 1),   houseColor));
 
-            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),   houseColor));
+            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),   houseColor));
 
             // back wall
+            vList.Add(new VertexPositionColor(new Vector3(xOffset, 0, zOffset), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),       houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
 
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, houseHeight, zOffset), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),       houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),       houseColor));
 
             // left wall
+            vList.Add(new VertexPositionColor(new Vector3(xOffset, 0, zOffset + 1), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset + 1),   houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
 
+            vList.Add(new VertexPositionColor(new Vector3(xOffset, houseHeight, zOffset), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset + 1),   houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      0,              zOffset),       houseColor));
 
             // right wall
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, houseHeight, zOffset + 1), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),      houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),  houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset + 1),  houseColor));
 
+            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset, 0, zOffset), houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset + 1),  houseColor));
-            vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  0,              zOffset),      houseColor));
             vList.Add(new VertexPositionColor(new Vector3(1 + xOffset,  houseHeight,    zOffset),      houseColor));
 
             return vList;
