@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Datorgrafik_FlygplansLab.Models;
-using System.IO;
 
 namespace Datorgrafik_FlygplansLab
 {
@@ -30,9 +29,6 @@ namespace Datorgrafik_FlygplansLab
 
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
-
-        SoundEffect soundEffect;
-        Stream soundfile;
 
         //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
@@ -67,9 +63,6 @@ namespace Datorgrafik_FlygplansLab
             //    GraphicsDevice.Viewport.AspectRatio,
             //    0.05f,
             //    100f);
-
-            
-
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
@@ -85,9 +78,8 @@ namespace Datorgrafik_FlygplansLab
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 5, 5));
             effect.Projection = camera.ViewProjectionMatrix;
             // Set vertex data in VertexBuffer
@@ -125,8 +117,6 @@ namespace Datorgrafik_FlygplansLab
 
             airplane.Update(gameTime);
             camera.Update(airplane);
-            LoopSound(soundEffect);
-
             base.Update(gameTime);
         }
 
@@ -137,15 +127,15 @@ namespace Datorgrafik_FlygplansLab
             float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             turningSpeed *= 1.6f * gameSpeed;
             KeyboardState keys = Keyboard.GetState();
-            if (keys.IsKeyDown(Keys.W))
+            if (keys.IsKeyDown(Keys.A))
                 leftRightRot += turningSpeed;
-            if (keys.IsKeyDown(Keys.S))
+            if (keys.IsKeyDown(Keys.D))
                 leftRightRot -= turningSpeed;
 
             float upDownRot = 0;
-            if (keys.IsKeyDown(Keys.A))
+            if (keys.IsKeyDown(Keys.S))
                 upDownRot += turningSpeed;
-            if (keys.IsKeyDown(Keys.D))
+            if (keys.IsKeyDown(Keys.W))
                 upDownRot -= turningSpeed;
 
             Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot);
@@ -183,17 +173,5 @@ namespace Datorgrafik_FlygplansLab
             base.Draw(gameTime);
         }
 
-        static protected void LoopSound(SoundEffect soundEffect)
-        {
-
-            SoundEffectInstance instance = soundEffect.CreateInstance();
-
-            instance.IsLooped = true;
-
-
-            instance.Play();
-
-
-        }
     }
 }

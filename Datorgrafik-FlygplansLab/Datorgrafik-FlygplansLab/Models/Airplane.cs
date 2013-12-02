@@ -124,7 +124,7 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             effect.VertexColorEnabled = true;
 
-            Matrix worldMatrix = Matrix.CreateScale(0.005f, 0.005f, 0.005f) * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
+            Matrix worldMatrix = Matrix.CreateScale(0.005f, 0.005f, 0.005f) * Matrix.CreateRotationY(90) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
             effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
@@ -143,7 +143,7 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             float distance = (float)(this.MoveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
 
-            Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), airplaneRotation);
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), airplaneRotation);
             this.airplanePosition += addVector * distance;
             this.CameraPosition += addVector * distance;
 
