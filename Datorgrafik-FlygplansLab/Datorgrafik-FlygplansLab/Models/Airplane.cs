@@ -12,8 +12,6 @@ namespace Datorgrafik_FlygplansLab.Models
     {
 
         public VertexPositionColor[] airplaneVertices { get; set; }
-        public Vector3 CameraPosition { get; set; }
-
 
         private GraphicsDevice device;
         private VertexBuffer airPlaneVertexBuffer;
