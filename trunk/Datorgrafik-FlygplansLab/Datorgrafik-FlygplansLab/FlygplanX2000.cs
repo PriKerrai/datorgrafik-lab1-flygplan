@@ -91,9 +91,9 @@ namespace Datorgrafik_FlygplansLab
             this.Components.Add(propellerRight);
 
             // Set cullmode to none
-            //RasterizerState rs = new RasterizerState();
-            //rs.CullMode = CullMode.None;
-            //GraphicsDevice.RasterizerState = rs;
+            RasterizerState rs = new RasterizerState();
+            rs.CullMode = CullMode.None;
+            GraphicsDevice.RasterizerState = rs;
             // TODO: use this.Content to load your game content here
         }
 
