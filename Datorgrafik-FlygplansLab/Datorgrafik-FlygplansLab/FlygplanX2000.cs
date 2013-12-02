@@ -65,6 +65,10 @@ namespace Datorgrafik_FlygplansLab
             airplane = new Airplane(this);
             propellerLeft = new Propeller(this);
             propellerRight = new Propeller(this);
+
+            
+            
+            
             
             base.Initialize();
         }
@@ -168,9 +172,16 @@ namespace Datorgrafik_FlygplansLab
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
 
+            
+
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
+
+                Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+                propellerLeft.propellerPosition = proLeftPos;
+                Vector3 proRightPos = new Vector3(airplane.airplanePosition.X, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+                propellerRight.propellerPosition = proRightPos;
 
                 propellerLeft.Draw(camera, effect);
                 propellerRight.Draw(camera, effect);
