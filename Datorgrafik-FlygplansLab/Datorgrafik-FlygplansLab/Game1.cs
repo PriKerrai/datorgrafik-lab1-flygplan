@@ -9,14 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Datorgrafik_FlygplansLab.Models;
-using System.IO;
 
 namespace Datorgrafik_FlygplansLab
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class FlygplanX2000 : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -24,6 +23,7 @@ namespace Datorgrafik_FlygplansLab
         Airplane airplane;
         Ground ground;
         Houses houses;
+        VertexBuffer vertexBuffer;
         float gameSpeed = 1.0f;
 
         BasicEffect effect;
@@ -31,12 +31,12 @@ namespace Datorgrafik_FlygplansLab
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
 
-        SoundEffect soundEffect;
-        Stream soundfile;
+        float moveScale = 1.5f;
+        float rotateScale = MathHelper.PiOver2;
 
         //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
-        public FlygplanX2000()
+        public Game1()
         {
 
             graphics = new GraphicsDeviceManager(this);
@@ -67,9 +67,6 @@ namespace Datorgrafik_FlygplansLab
             //    GraphicsDevice.Viewport.AspectRatio,
             //    0.05f,
             //    100f);
-
-            
-
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
@@ -85,10 +82,9 @@ namespace Datorgrafik_FlygplansLab
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(GraphicsDevice, new Vector3(0, 5, 5));
+            this.camera = new Camera(GraphicsDevice);
             effect.Projection = camera.ViewProjectionMatrix;
             // Set vertex data in VertexBuffer
             //vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
@@ -119,18 +115,15 @@ namespace Datorgrafik_FlygplansLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            ProcessInput(gameTime);
+            ProcessKeyboard(gameTime);
+            airplane.Update(gameTime);
             float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
             MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
-
-            airplane.Update(gameTime);
-            camera.Update(airplane);
-            LoopSound(soundEffect);
 
             base.Update(gameTime);
         }
 
-        private void ProcessInput(GameTime gameTime)
+        private void ProcessKeyboard(GameTime gameTime)
         {
             float leftRightRot = 0;
 
@@ -164,6 +157,7 @@ namespace Datorgrafik_FlygplansLab
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -177,23 +171,11 @@ namespace Datorgrafik_FlygplansLab
 
                 ground.Draw(camera, effect);
                 airplane.Draw(camera, effect);
-                houses.Draw(camera, effect);
+                //houses.Draw(camera, effect);
             }
 
             base.Draw(gameTime);
         }
 
-        static protected void LoopSound(SoundEffect soundEffect)
-        {
-
-            SoundEffectInstance instance = soundEffect.CreateInstance();
-
-            instance.IsLooped = true;
-
-
-            instance.Play();
-
-
-        }
     }
 }
