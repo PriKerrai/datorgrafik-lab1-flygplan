@@ -49,7 +49,7 @@ namespace Datorgrafik_FlygplansLab
         }
 
         public void Update(Airplane airplane) {
-            this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
+            //this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
 
 
             Vector3 campos = new Vector3(0, 0.15f, 0.5f);
