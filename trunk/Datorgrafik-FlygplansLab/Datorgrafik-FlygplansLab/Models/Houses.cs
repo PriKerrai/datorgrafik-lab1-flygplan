@@ -13,7 +13,7 @@ namespace Datorgrafik_FlygplansLab.Models
         VertexBuffer houseBuffer;
 
         private const int numberOfHouseHeights = 3;
-        int[] houseHeights = new int[numberOfHouseHeights] { 2, 4, 6 };
+        float[] houseHeights = new float[numberOfHouseHeights] { 1, 2.5f, 3.8f };
         int[,] housePositions;
         List<VertexPositionColor> housesVertices = new List<VertexPositionColor>();
         private const int numberOfHouseColors = 3;
@@ -53,7 +53,7 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             List<VertexPositionColor> vList = new List<VertexPositionColor>();
 
-            int houseHeight = houseHeights[random.Next(0, numberOfHouseHeights)];
+            float houseHeight = houseHeights[random.Next(0, numberOfHouseHeights)];
 
             // roof
             vList.Add(new VertexPositionColor(new Vector3(xOffset,      houseHeight,    zOffset),       houseColor));

@@ -23,6 +23,7 @@ namespace Datorgrafik_FlygplansLab
         Airplane airplane;
         Ground ground;
         Houses houses;
+        Propeller propeller;
         float gameSpeed = 1.0f;
 
         BasicEffect effect;
@@ -57,16 +58,11 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //camera = new Camera(
-            //    new Vector3(-5f, 0.5f, 0.5f),
-            //    0,
-            //    GraphicsDevice.Viewport.AspectRatio,
-            //    0.05f,
-            //    100f);
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
             airplane = new Airplane(this);
+            propeller = new Propeller(GraphicsDevice);
             
             base.Initialize();
         }
@@ -82,16 +78,13 @@ namespace Datorgrafik_FlygplansLab
             
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 5, 5));
             effect.Projection = camera.ViewProjectionMatrix;
-            // Set vertex data in VertexBuffer
-            //vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
-            //vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
 
             airplane.loadAirplane(this.GraphicsDevice, camera.Position, 10f);
 
             // Set cullmode to none
-            RasterizerState rs = new RasterizerState();
-            rs.CullMode = CullMode.None;
-            GraphicsDevice.RasterizerState = rs;
+            //RasterizerState rs = new RasterizerState();
+            //rs.CullMode = CullMode.None;
+            //GraphicsDevice.RasterizerState = rs;
             // TODO: use this.Content to load your game content here
         }
 
@@ -116,6 +109,7 @@ namespace Datorgrafik_FlygplansLab
             MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
 
             airplane.Update(gameTime);
+            propeller.Update(gameTime);
             camera.Update(airplane);
             base.Update(gameTime);
         }
@@ -142,9 +136,9 @@ namespace Datorgrafik_FlygplansLab
             airplane.airplaneRotation *= additionalRot;
         }
 
-        private void MoveForward(ref Vector3 position, Quaternion rotationQuat, float speed)
+        private void MoveForward(ref Vector3 position, Quaternion rotationQuaternion, float speed)
         {
-            Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), rotationQuat);
+            Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), rotationQuaternion);
             position += addVector * speed;
         }
         /// <summary>
@@ -165,9 +159,11 @@ namespace Datorgrafik_FlygplansLab
             {
                 pass.Apply();
 
-                ground.Draw(camera, effect);
-                airplane.Draw(camera, effect);
-                houses.Draw(camera, effect);
+                propeller.Draw(camera, effect);
+
+                //ground.Draw(camera, effect);
+                //airplane.Draw(camera, effect);
+                //houses.Draw(camera, effect);
             }
 
             base.Draw(gameTime);
