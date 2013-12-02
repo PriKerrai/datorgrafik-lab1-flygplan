@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Datorgrafik_FlygplansLab.Models;
 
 namespace Datorgrafik_FlygplansLab.Models
 {
-    class Propeller : DrawableGameComponent
+    public class Propeller : DrawableGameComponent
     {
         private GraphicsDevice device;
         private VertexBuffer propellerVertexBuffer;
@@ -17,7 +18,7 @@ namespace Datorgrafik_FlygplansLab.Models
         private float MoveSpeed = 1.5f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
-        public Vector3 propellerPosition = new Vector3(25, 6, 50);
+        public Vector3 propellerPosition;
 
         public Propeller(Game game)
         : base(game)
@@ -76,16 +77,19 @@ namespace Datorgrafik_FlygplansLab.Models
         public void Draw(Camera camera, BasicEffect effect)
         {
             effect.VertexColorEnabled = true;
+            //Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
+            //rotAxis.Normalize();
 
-            Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateTranslation(propellerPosition);
+            //Matrix rotationMatrix = Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
+            //effect.World = rotationMatrix;
+
+
+            Matrix worldMatrix = Matrix.Identity * Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(propellerPosition);
             effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 
-            //Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
-            //rotAxis.Normalize();
-
-            //// position propeller
+            // position propeller
   
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -98,12 +102,12 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public override void Update(GameTime gameTime)
         {
-            float distance = (float)(this.MoveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
+            rotateSpeed += 0.7f;
 
-            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), propellerRotation);
-            this.propellerPosition += addVector * distance;
+            this.propellerRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rotateSpeed);
 
             base.Update(gameTime);
+
         }
     }
 
