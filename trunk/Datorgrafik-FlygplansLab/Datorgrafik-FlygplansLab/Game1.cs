@@ -39,10 +39,7 @@ namespace Datorgrafik_FlygplansLab
         {
 
             graphics = new GraphicsDeviceManager(this);
-            airplane = new Airplane();
-
-            airplane.InitializeVertices();
-
+        
             //MAX FPS SPEED WROOM
             this.IsFixedTimeStep = false;
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -64,7 +61,7 @@ namespace Datorgrafik_FlygplansLab
         {
             // TODO: Add your initialization logic here
             camera = new Camera(
-                new Vector3(0.5f, 0.5f, 0.5f),
+                new Vector3(-5f, 0.5f, 0.5f),
                 0,
                 GraphicsDevice.Viewport.AspectRatio,
                 0.05f,
@@ -85,8 +82,10 @@ namespace Datorgrafik_FlygplansLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Set vertex data in VertexBuffer
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
-            vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
+            //vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
+            //vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
+
+            airplane = new Airplane(this.GraphicsDevice, camera.Position, 10f);
 
             // Set cullmode to none
             RasterizerState rs = new RasterizerState();
@@ -172,13 +171,13 @@ namespace Datorgrafik_FlygplansLab
             {
                 pass.Apply();
 
-                ground.Draw(camera, effect);
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplane.airplaneVertices, 0, 18);
-                houses.Draw(camera, effect);
+                //ground.Draw(camera, effect);
+                airplane.Draw(camera, effect);
+                //houses.Draw(camera, effect);
             }
 
             base.Draw(gameTime);
         }
 
     }
-    }
+}
