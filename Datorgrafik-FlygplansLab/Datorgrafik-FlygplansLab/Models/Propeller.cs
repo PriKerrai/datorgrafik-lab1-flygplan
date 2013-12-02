@@ -16,7 +16,7 @@ namespace Datorgrafik_FlygplansLab.Models
         private float rotateSpeed = 0.05f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
-        public Vector3 propellerPosition = new Vector3(25, 15, 25);
+        public Vector3 propellerPosition = new Vector3(24, 6, 40);
 
         public Propeller(Game game)
         : base(game)
@@ -29,7 +29,7 @@ namespace Datorgrafik_FlygplansLab.Models
             device = graphicsDevice;
 
             InitializeVertices();
-
+            
             propellerVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, propellerVertices.Length, BufferUsage.WriteOnly);
             propellerVertexBuffer.SetData<VertexPositionColor>(propellerVertices.ToArray());
         }
@@ -76,46 +76,31 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             effect.VertexColorEnabled = true;
 
-            //Matrix worldMatrix = Matrix.CreateScale(0.15f, 0.15f, 0.15f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation();
-
-           
-
-            effect.World = Matrix.Identity;
+            Matrix worldMatrix = Matrix.CreateScale(0.15f, 0.15f, 0.15f) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(propellerPosition);
+            effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
-
-            Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
-            rotAxis.Normalize();
-
-            // position propeller
-            Matrix worldMatrix = Matrix.CreateTranslation(propellerPosition);
-
-            // rotate propeller
-            worldMatrix = Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
-            effect.World = worldMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 device.SetVertexBuffer(propellerVertexBuffer);
-
                 device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, propellerVertices, 0, 12);
 
             }
         }
 
-        //public override void Draw(GameTime gameTime)
-        //{
-            
-            
-        //    base.Draw(gameTime);
-        //}
-
         public override void Update(GameTime gameTime)
         {
-            rotateSpeed += 0.0005f;
+            //rotateSpeed += 0.0005f;
+            float distance = (float)(this.rotateSpeed * gameTime.ElapsedGameTime.TotalSeconds);
+
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), propellerRotation);
+            this.propellerPosition += addVector * distance;
 
             base.Update(gameTime);
         }
     }
+
+
 }
