@@ -107,8 +107,8 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             effect.VertexColorEnabled = true;
             effect.World = Matrix.Identity;
-            effect.View = camera.View;
-            effect.Projection = camera.Projection;
+            effect.View = camera.ViewMatrix;
+            effect.Projection = camera.ViewProjectionMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
