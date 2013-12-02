@@ -18,9 +18,9 @@ namespace Datorgrafik_FlygplansLab.Models
         private GraphicsDevice device;
         private VertexBuffer airPlaneVertexBuffer;
 
-        public Vector3 airplanePosition = new Vector3(8, 1, -3);
+        public Vector3 airplanePosition = new Vector3(25, 6, 100);
         public Quaternion airplaneRotation = Quaternion.Identity;
-        private float MoveSpeed = 2f;
+        private float MoveSpeed = 1.5f;
 
         public Airplane(Game game)
             : base(game)
@@ -124,7 +124,7 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             effect.VertexColorEnabled = true;
 
-            Matrix worldMatrix = Matrix.CreateScale(0.005f, 0.005f, 0.005f) * Matrix.CreateRotationY(90) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
+            Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
             effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
@@ -133,7 +133,6 @@ namespace Datorgrafik_FlygplansLab.Models
             {
                 pass.Apply();
                 device.SetVertexBuffer(airPlaneVertexBuffer);
-
                 device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplaneVertices, 0, 12);
 
             }
@@ -145,8 +144,7 @@ namespace Datorgrafik_FlygplansLab.Models
 
             Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), airplaneRotation);
             this.airplanePosition += addVector * distance;
-            this.CameraPosition += addVector * distance;
-
+           
             base.Update(gameTime);
         }
 

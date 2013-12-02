@@ -49,24 +49,15 @@ namespace Datorgrafik_FlygplansLab
         }
 
         public void Update(Airplane airplane) {
-            //this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
-
-            Vector3 campos = new Vector3(0, 0.1f, 0.6f);
+            Vector3 campos = new Vector3(0, 0.15f, 0.5f);
             campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(airplane.airplaneRotation));
             campos += airplane.airplanePosition;
 
             Vector3 camup = new Vector3(0, 1, 0);
             camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(airplane.airplaneRotation));
 
-            //this.Position = campos;
-            //this.UpDirection = camup;
-
             this.ViewMatrix = Matrix.CreateLookAt(campos, airplane.airplanePosition, camup);
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, AspectRatio, nearPlaneDistance, farPlaneDistance);
-
-            //this.ViewMatrix = Matrix.CreateLookAt(this.Position, airplane.airplanePosition, this.UpDirection);
-            //this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-            //    MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);
         }
 
     }
