@@ -19,6 +19,7 @@ namespace Datorgrafik_FlygplansLab.Models
         
         public Quaternion propellerRotation = Quaternion.Identity;
         public Vector3 propellerPosition;
+        Matrix oldWorld;
 
         public Propeller(Game game)
         : base(game)
@@ -82,10 +83,11 @@ namespace Datorgrafik_FlygplansLab.Models
 
             //Matrix rotationMatrix = Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
             //effect.World = rotationMatrix;
+            oldWorld = effect.World;
 
+            Matrix propMatrix = oldWorld * Matrix.Identity * Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(propellerPosition);
 
-            Matrix worldMatrix = Matrix.Identity * Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(propellerPosition);
-            effect.World = worldMatrix;
+            effect.World = propMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 

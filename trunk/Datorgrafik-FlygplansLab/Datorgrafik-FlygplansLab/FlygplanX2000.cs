@@ -181,14 +181,15 @@ namespace Datorgrafik_FlygplansLab
             effect.View = camera.ViewMatrix;
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
+
+            Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X - 0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+            propellerLeft.propellerPosition = proLeftPos;
+            Vector3 proRightPos = new Vector3(airplane.airplanePosition.X + 0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+            propellerRight.propellerPosition = proRightPos;
+
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-
-                Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X-0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
-                propellerLeft.propellerPosition = proLeftPos;
-                Vector3 proRightPos = new Vector3(airplane.airplanePosition.X+0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
-               propellerRight.propellerPosition = proRightPos;
 
                 propellerLeft.Draw(camera, effect);
                 propellerRight.Draw(camera, effect);
