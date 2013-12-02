@@ -34,7 +34,7 @@ namespace Datorgrafik_FlygplansLab.Models
             {
                 for (int z = 0; z < Ground.groundHeight; z++)
                 {
-                    if (random.Next(0,5) == 0)
+                    if (random.Next(0,10) == 0)
                     {
                         foreach (VertexPositionColor vertex in HouseVertices(x, z, houseColors[random.Next(0, numberOfHouseColors)]))
                         {

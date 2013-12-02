@@ -19,7 +19,7 @@ namespace Datorgrafik_FlygplansLab
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            using (FlygplanX2000 game = new FlygplanX2000())
             {
                 game.Run();
             }
