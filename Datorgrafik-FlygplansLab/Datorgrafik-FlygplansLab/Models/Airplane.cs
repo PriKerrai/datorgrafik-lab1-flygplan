@@ -8,22 +8,31 @@ using Microsoft.Xna.Framework;
 
 namespace Datorgrafik_FlygplansLab.Models
 {
-    public class Airplane
+    public class Airplane : GameComponent
     {
 
         public VertexPositionColor[] airplaneVertices { get; set; }
+        public Vector3 CameraPosition { get; set; }
+
 
         private GraphicsDevice device;
-        private Vector3 location;
         private VertexBuffer airPlaneVertexBuffer;
 
-        public Airplane(GraphicsDevice graphicsDevice, Vector3 playerLocation, float minDistance)
+        public Vector3 airplanePosition = new Vector3(0, 3, 5);
+        public Quaternion airplaneRotation = Quaternion.Identity;
+        private float MoveSpeed = 0.005f;
+
+        public Airplane(Game game)
+            : base(game)
+        {
+            
+        }
+
+        public void loadAirplane(GraphicsDevice graphicsDevice, Vector3 playerLocation, float minDistance)
         {
             device = graphicsDevice;
 
-
             InitializeVertices();
-            PositionAirplane(playerLocation, minDistance);
 
             airPlaneVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, airplaneVertices.Length, BufferUsage.WriteOnly);
             airPlaneVertexBuffer.SetData<VertexPositionColor>(airplaneVertices.ToArray());
@@ -111,23 +120,15 @@ namespace Datorgrafik_FlygplansLab.Models
             airplaneVertices[35] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
         }
 
-        public void PositionAirplane(Vector3 playerLocation, float minDistance)
-        {
-            location = new Vector3(1.5f, 0.5f, 1.5f);
-        }
-
         public void Draw(Camera camera, BasicEffect effect)
         {
             effect.VertexColorEnabled = true;
 
-            Matrix center = Matrix.CreateTranslation(
-            new Vector3(-0.5f, -0.5f, -0.5f));
-            Matrix scale = Matrix.CreateScale(0.25f);
-            Matrix translate = Matrix.CreateTranslation(location);
-            
-            effect.World = center * scale * translate;
-            effect.View = camera.View;
-            effect.Projection = camera.Projection;
+            Matrix worldMatrix = Matrix.CreateScale(0.0025f, 0.0025f, 0.0025f) * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
+
+            effect.World = worldMatrix;
+            effect.View = camera.ViewMatrix;
+            effect.Projection = camera.ViewProjectionMatrix;
             
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -138,5 +139,18 @@ namespace Datorgrafik_FlygplansLab.Models
 
             }
         }
+
+        public override void Update(GameTime gameTime)
+        {   
+            
+            float distance = (float)(this.MoveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
+
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, 1), airplaneRotation);
+            this.airplanePosition += addVector * distance;
+            this.CameraPosition += addVector * distance;
+
+            base.Update(gameTime);
+        }
+
     }
-}
+} 

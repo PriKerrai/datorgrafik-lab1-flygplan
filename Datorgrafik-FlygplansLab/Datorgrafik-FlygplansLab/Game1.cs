@@ -24,6 +24,7 @@ namespace Datorgrafik_FlygplansLab
         Ground ground;
         Houses houses;
         VertexBuffer vertexBuffer;
+        float gameSpeed = 1.0f;
 
         BasicEffect effect;
 
@@ -60,15 +61,16 @@ namespace Datorgrafik_FlygplansLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(
-                new Vector3(-5f, 0.5f, 0.5f),
-                0,
-                GraphicsDevice.Viewport.AspectRatio,
-                0.05f,
-                100f);
+            //camera = new Camera(
+            //    new Vector3(-5f, 0.5f, 0.5f),
+            //    0,
+            //    GraphicsDevice.Viewport.AspectRatio,
+            //    0.05f,
+            //    100f);
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
+            airplane = new Airplane(this);
             
             base.Initialize();
         }
@@ -82,11 +84,13 @@ namespace Datorgrafik_FlygplansLab
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            this.camera = new Camera(GraphicsDevice);
+            effect.Projection = camera.ViewProjectionMatrix;
             // Set vertex data in VertexBuffer
             //vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
             //vertexBuffer.SetData<VertexPositionColor>(airplane.airplaneVertices);
 
-            airplane = new Airplane(this.GraphicsDevice, camera.Position, 10f);
+            airplane.loadAirplane(this.GraphicsDevice, camera.Position, 10f);
 
             // Set cullmode to none
             RasterizerState rs = new RasterizerState();
@@ -111,49 +115,40 @@ namespace Datorgrafik_FlygplansLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            KeyboardState keyState = Keyboard.GetState();
-            float moveAmount = 0;
-
-            if (keyState.IsKeyDown(Keys.D))
-            {
-                camera.Rotation = MathHelper.WrapAngle(
-                camera.Rotation - (rotateScale * elapsed));
-            }
-            if (keyState.IsKeyDown(Keys.A))
-            {
-                camera.Rotation = MathHelper.WrapAngle(
-                camera.Rotation + (rotateScale * elapsed));
-            }
-            if (keyState.IsKeyDown(Keys.W))
-            {
-                //camera.MoveForward(moveScale * elapsed);
-                moveAmount = moveScale * elapsed;
-            }
-            if (keyState.IsKeyDown(Keys.S))
-            {
-                //camera.MoveForward(-moveScale * elapsed);
-                moveAmount = -moveScale * elapsed;
-            }
-            if (moveAmount != 0)
-            {
-                Vector3 newLocation = camera.PreviewMove(moveAmount);
-                bool moveOk = true;
-                if (newLocation.X < 0 || newLocation.X > Ground.groundWidth)
-                    moveOk = false;
-                if (newLocation.Z < 0 || newLocation.Z > Ground.groundHeight)
-                    moveOk = false;
-                if (moveOk)
-                    camera.MoveForward(moveAmount);
-            }
-
-            // Allows the game to exit
-            if (keyState.IsKeyDown(Keys.Escape))
-                this.Exit();
+            ProcessKeyboard(gameTime);
+            float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
+            MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
 
             base.Update(gameTime);
         }
 
+        private void ProcessKeyboard(GameTime gameTime)
+        {
+            float leftRightRot = 0;
+
+            float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
+            turningSpeed *= 1.6f * gameSpeed;
+            KeyboardState keys = Keyboard.GetState();
+            if (keys.IsKeyDown(Keys.D))
+                leftRightRot += turningSpeed;
+            if (keys.IsKeyDown(Keys.A))
+                leftRightRot -= turningSpeed;
+
+            float upDownRot = 0;
+            if (keys.IsKeyDown(Keys.S))
+                upDownRot += turningSpeed;
+            if (keys.IsKeyDown(Keys.W))
+                upDownRot -= turningSpeed;
+
+            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot);
+            airplane.airplaneRotation *= additionalRot;
+        }
+
+        private void MoveForward(ref Vector3 position, Quaternion rotationQuat, float speed)
+        {
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), rotationQuat);
+            position += addVector * speed;
+        }
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -165,6 +160,7 @@ namespace Datorgrafik_FlygplansLab
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
+            effect.View = camera.ViewMatrix;
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
 
@@ -172,7 +168,7 @@ namespace Datorgrafik_FlygplansLab
             {
                 pass.Apply();
 
-                //ground.Draw(camera, effect);
+                ground.Draw(camera, effect);
                 airplane.Draw(camera, effect);
                 //houses.Draw(camera, effect);
             }
