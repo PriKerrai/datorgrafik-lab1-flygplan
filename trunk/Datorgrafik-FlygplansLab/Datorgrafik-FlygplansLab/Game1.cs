@@ -69,6 +69,7 @@ namespace Datorgrafik_FlygplansLab
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
+            
             base.Initialize();
         }
 

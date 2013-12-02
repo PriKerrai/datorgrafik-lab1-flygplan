@@ -21,7 +21,9 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             device = graphicsDevice;
 
+
             InitializeVertices();
+            PositionAirplane(playerLocation, minDistance);
 
             airPlaneVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, airplaneVertices.Length, BufferUsage.WriteOnly);
             airPlaneVertexBuffer.SetData<VertexPositionColor>(airplaneVertices.ToArray());
@@ -32,7 +34,7 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public void InitializeVertices()
         {
-            airplaneVertices = new VertexPositionColor[100];
+            airplaneVertices = new VertexPositionColor[36];
 
             Color colorNose = Color.White;
             Color colorBody = Color.Black;
@@ -116,11 +118,11 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public void Draw(Camera camera, BasicEffect effect)
         {
-            effect.VertexColorEnabled = false;
+            effect.VertexColorEnabled = true;
 
             Matrix center = Matrix.CreateTranslation(
             new Vector3(-0.5f, -0.5f, -0.5f));
-            Matrix scale = Matrix.CreateScale(0.5f);
+            Matrix scale = Matrix.CreateScale(0.25f);
             Matrix translate = Matrix.CreateTranslation(location);
             
             effect.World = center * scale * translate;
@@ -131,11 +133,9 @@ namespace Datorgrafik_FlygplansLab.Models
             {
                 pass.Apply();
                 device.SetVertexBuffer(airPlaneVertexBuffer);
-                
-                device.DrawPrimitives(
-                PrimitiveType.TriangleList,
-                0,
-                airPlaneVertexBuffer.VertexCount / 3);
+
+                device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplaneVertices, 0, 12);
+
             }
         }
     }
