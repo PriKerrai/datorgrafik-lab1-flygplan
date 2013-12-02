@@ -42,12 +42,16 @@ namespace Datorgrafik_FlygplansLab
             this.nearPlaneDistance = 0.0001f;
             this.farPlaneDistance = 100000f;
 
+
             this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 2, 1), new Vector3(0, 1, 0));
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);
         }
 
         public void Update(Airplane airplane) {
+            this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
+
+
             Vector3 campos = new Vector3(0, 0.15f, 0.5f);
             campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(airplane.airplaneRotation));
             campos += airplane.airplanePosition;

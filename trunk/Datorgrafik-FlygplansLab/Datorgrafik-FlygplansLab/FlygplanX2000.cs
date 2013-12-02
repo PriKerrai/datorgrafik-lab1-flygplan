@@ -85,7 +85,7 @@ namespace Datorgrafik_FlygplansLab
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 55, 55));
             effect.Projection = camera.ViewProjectionMatrix;
 
-            airplane.loadAirplane(GraphicsDevice, camera.Position, 10f);
+            airplane.loadAirplane(GraphicsDevice);
             propellerLeft.loadPropeller(GraphicsDevice);
             propellerRight.loadPropeller(GraphicsDevice);
 
@@ -119,8 +119,8 @@ namespace Datorgrafik_FlygplansLab
         {
             ProcessInput(gameTime);
             float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
+            
             MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
-
             //airplane.Update(gameTime);
             //propellerLeft.Update(gameTime);
             //propellerRight.Update(gameTime);
@@ -130,11 +130,18 @@ namespace Datorgrafik_FlygplansLab
 
         private void ProcessInput(GameTime gameTime)
         {
-            float leftRightRot = 0;
+            
 
             float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             turningSpeed *= 1.6f * gameSpeed;
             KeyboardState keys = Keyboard.GetState();
+            float yawRot = 0;
+            if (keys.IsKeyDown(Keys.R))
+                yawRot += turningSpeed;
+            if (keys.IsKeyDown(Keys.F))
+                yawRot -= turningSpeed;
+
+            float leftRightRot = 0;
             if (keys.IsKeyDown(Keys.A))
                 leftRightRot += turningSpeed;
             if (keys.IsKeyDown(Keys.D))
@@ -146,8 +153,10 @@ namespace Datorgrafik_FlygplansLab
             if (keys.IsKeyDown(Keys.W))
                 upDownRot -= turningSpeed;
 
-            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot);
-            
+            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) 
+                * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
+            ;
+
             airplane.airplaneRotation *= additionalRot;
             propellerLeft.propellerRotation *= additionalRot;
             propellerRight.propellerRotation *= additionalRot;
@@ -158,6 +167,7 @@ namespace Datorgrafik_FlygplansLab
             Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), rotationQuaternion);
             position += addVector * speed;
         }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -171,17 +181,14 @@ namespace Datorgrafik_FlygplansLab
             effect.View = camera.ViewMatrix;
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
-
-            
-
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
-                Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+                Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X-0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
                 propellerLeft.propellerPosition = proLeftPos;
-                Vector3 proRightPos = new Vector3(airplane.airplanePosition.X, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
-                propellerRight.propellerPosition = proRightPos;
+                Vector3 proRightPos = new Vector3(airplane.airplanePosition.X+0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
+               propellerRight.propellerPosition = proRightPos;
 
                 propellerLeft.Draw(camera, effect);
                 propellerRight.Draw(camera, effect);

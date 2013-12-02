@@ -26,7 +26,7 @@ namespace Datorgrafik_FlygplansLab.Models
             
         }
 
-        public void loadAirplane(GraphicsDevice graphicsDevice, Vector3 playerLocation, float minDistance)
+        public void loadAirplane(GraphicsDevice graphicsDevice)
         {
             device = graphicsDevice;
 
