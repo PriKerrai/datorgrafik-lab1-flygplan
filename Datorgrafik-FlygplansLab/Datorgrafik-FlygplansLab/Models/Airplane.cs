@@ -18,7 +18,7 @@ namespace Datorgrafik_FlygplansLab.Models
         private GraphicsDevice device;
         private VertexBuffer airPlaneVertexBuffer;
 
-        public Vector3 airplanePosition = new Vector3(25, 6, 100);
+        public Vector3 airplanePosition = new Vector3(25, 6, 50);
         public Quaternion airplaneRotation = Quaternion.Identity;
         private float MoveSpeed = 1.5f;
 
@@ -147,6 +147,5 @@ namespace Datorgrafik_FlygplansLab.Models
            
             base.Update(gameTime);
         }
-
     }
 } 
