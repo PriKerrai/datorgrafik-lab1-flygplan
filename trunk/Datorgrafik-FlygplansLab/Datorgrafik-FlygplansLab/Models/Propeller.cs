@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Datorgrafik_FlygplansLab.Models
 {
-    class Propeller
+    class Propeller : DrawableGameComponent
     {
         private GraphicsDevice device;
         private VertexBuffer propellerVertexBuffer;
@@ -16,12 +16,12 @@ namespace Datorgrafik_FlygplansLab.Models
         private float rotateSpeed = 0.05f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
-        public Vector3 propellerPosition = new Vector3(25, 6, 100);
+        public Vector3 propellerPosition = new Vector3(25, 15, 25);
 
-        public Propeller(GraphicsDevice device)
+        public Propeller(Game game)
+        : base(game)
         {
-            this.device = device;
-            loadPropeller(device);
+
         }
 
         public void loadPropeller(GraphicsDevice graphicsDevice)
@@ -32,7 +32,6 @@ namespace Datorgrafik_FlygplansLab.Models
 
             propellerVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, propellerVertices.Length, BufferUsage.WriteOnly);
             propellerVertexBuffer.SetData<VertexPositionColor>(propellerVertices.ToArray());
-
         }
 
         private void InitializeVertices()
@@ -78,13 +77,21 @@ namespace Datorgrafik_FlygplansLab.Models
             effect.VertexColorEnabled = true;
 
             //Matrix worldMatrix = Matrix.CreateScale(0.15f, 0.15f, 0.15f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation();
+
+           
+
             effect.World = Matrix.Identity;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 
             Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
             rotAxis.Normalize();
-            Matrix worldMatrix = Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
+
+            // position propeller
+            Matrix worldMatrix = Matrix.CreateTranslation(propellerPosition);
+
+            // rotate propeller
+            worldMatrix = Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
             effect.World = worldMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
@@ -97,10 +104,18 @@ namespace Datorgrafik_FlygplansLab.Models
             }
         }
 
-        public void Update(GameTime gameTime)
+        //public override void Draw(GameTime gameTime)
+        //{
+            
+            
+        //    base.Draw(gameTime);
+        //}
+
+        public override void Update(GameTime gameTime)
         {
             rotateSpeed += 0.0005f;
-                
+
+            base.Update(gameTime);
         }
     }
 }
