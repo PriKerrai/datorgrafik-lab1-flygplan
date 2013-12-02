@@ -116,7 +116,7 @@
     <Compile Include="Models\Propeller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="FlygplanX2000.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

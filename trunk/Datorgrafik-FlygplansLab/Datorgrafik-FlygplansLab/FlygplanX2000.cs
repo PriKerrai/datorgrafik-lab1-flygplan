@@ -15,7 +15,7 @@ namespace Datorgrafik_FlygplansLab
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class FlygplanX2000 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -36,7 +36,7 @@ namespace Datorgrafik_FlygplansLab
 
         //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
-        public Game1()
+        public FlygplanX2000()
         {
 
             graphics = new GraphicsDeviceManager(this);
@@ -84,7 +84,9 @@ namespace Datorgrafik_FlygplansLab
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.camera = new Camera(GraphicsDevice);
+            
+
+            this.camera = new Camera(GraphicsDevice, new Vector3(0, 5, 5));
             effect.Projection = camera.ViewProjectionMatrix;
             // Set vertex data in VertexBuffer
             //vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), airplane.airplaneVertices.Length, BufferUsage.None);
@@ -115,29 +117,31 @@ namespace Datorgrafik_FlygplansLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            ProcessKeyboard(gameTime);
+            ProcessInput(gameTime);
             float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
             MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
 
+            airplane.Update(gameTime);
+            camera.Update(airplane);
             base.Update(gameTime);
         }
 
-        private void ProcessKeyboard(GameTime gameTime)
+        private void ProcessInput(GameTime gameTime)
         {
             float leftRightRot = 0;
 
             float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             turningSpeed *= 1.6f * gameSpeed;
             KeyboardState keys = Keyboard.GetState();
-            if (keys.IsKeyDown(Keys.D))
+            if (keys.IsKeyDown(Keys.W))
                 leftRightRot += turningSpeed;
-            if (keys.IsKeyDown(Keys.A))
+            if (keys.IsKeyDown(Keys.S))
                 leftRightRot -= turningSpeed;
 
             float upDownRot = 0;
-            if (keys.IsKeyDown(Keys.S))
+            if (keys.IsKeyDown(Keys.A))
                 upDownRot += turningSpeed;
-            if (keys.IsKeyDown(Keys.W))
+            if (keys.IsKeyDown(Keys.D))
                 upDownRot -= turningSpeed;
 
             Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot);
@@ -146,7 +150,7 @@ namespace Datorgrafik_FlygplansLab
 
         private void MoveForward(ref Vector3 position, Quaternion rotationQuat, float speed)
         {
-            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), rotationQuat);
+            Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), rotationQuat);
             position += addVector * speed;
         }
         /// <summary>
@@ -170,7 +174,7 @@ namespace Datorgrafik_FlygplansLab
 
                 ground.Draw(camera, effect);
                 airplane.Draw(camera, effect);
-                //houses.Draw(camera, effect);
+                houses.Draw(camera, effect);
             }
 
             base.Draw(gameTime);

@@ -32,36 +32,36 @@ namespace Datorgrafik_FlygplansLab
         public float farPlaneDistance { get; set; }
 
 
-        public Camera(GraphicsDevice graphics)
+        public Camera(GraphicsDevice graphics, Vector3 startingPosition)
         {
             this.device = graphics;            
 
             //Settings
             this.AspectRatio = device.DisplayMode.AspectRatio;
-            this.Position = new Vector3(0, 3, 5);
-            this.nearPlaneDistance = 0.1f;
+            this.Position = startingPosition;
+            this.nearPlaneDistance = 0.0001f;
             this.farPlaneDistance = 10000f;
 
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 2, 1), new Vector3(0, 1, 0));
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);
         }
 
         public void Update(Airplane player) {
             this.Rotation = Quaternion.Lerp(this.Rotation, player.airplaneRotation, 0.1f);
-            
-            Vector3 campos = new Vector3(1, 3, 5);
-            campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(this.Rotation));
+
+            Vector3 campos = new Vector3(0, 0, 0);
+            campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(Rotation));
             campos += player.CameraPosition;
 
             Vector3 camup = new Vector3(0, 1, 0);
-            camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(this.Rotation));
+            camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(Rotation));
 
             this.Position = campos;
             this.UpDirection = camup;
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.Position, player.CameraPosition, this.UpDirection);
+            this.ViewMatrix = Matrix.CreateLookAt(this.Position, player.airplanePosition, this.UpDirection);
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);
         }
