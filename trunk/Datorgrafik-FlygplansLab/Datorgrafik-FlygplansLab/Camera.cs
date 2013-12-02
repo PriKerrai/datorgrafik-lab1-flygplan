@@ -42,7 +42,6 @@ namespace Datorgrafik_FlygplansLab
             this.nearPlaneDistance = 0.0001f;
             this.farPlaneDistance = 100000f;
 
-
             this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 2, 1), new Vector3(0, 1, 0));
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);

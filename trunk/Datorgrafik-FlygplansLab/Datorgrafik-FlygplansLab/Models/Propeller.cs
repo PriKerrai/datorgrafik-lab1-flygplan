@@ -17,7 +17,7 @@ namespace Datorgrafik_FlygplansLab.Models
         private float MoveSpeed = 1.5f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
-        public Vector3 propellerPosition = new Vector3(24, 6, 40);
+        public Vector3 propellerPosition = new Vector3(25, 6, 50);
 
         public Propeller(Game game)
         : base(game)
@@ -77,16 +77,16 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             effect.VertexColorEnabled = true;
 
+            Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateTranslation(propellerPosition);
+            effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 
-            Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
-            rotAxis.Normalize();
+            //Vector3 rotAxis = new Vector3(0, 0, rotateSpeed);
+            //rotAxis.Normalize();
 
-            // position propeller
-            Matrix worldMatrix = Matrix.CreateScale(0.15f, 0.15f, 0.15f) * Matrix.CreateTranslation(propellerPosition) * Matrix.CreateFromAxisAngle(rotAxis, rotateSpeed);
-            effect.World = worldMatrix;
-            
+            //// position propeller
+  
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -98,7 +98,6 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public override void Update(GameTime gameTime)
         {
-            rotateSpeed += 0.0005f;
             float distance = (float)(this.MoveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
 
             Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), propellerRotation);
