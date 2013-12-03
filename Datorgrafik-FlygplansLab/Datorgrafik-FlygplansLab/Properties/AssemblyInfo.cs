@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Datorgrafik-FlygplansLab")]
-[assembly: AssemblyProduct("Datorgrafik-FlygplansLab")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyTitle("FlygplanX2000 av Martin och Karl")]
+[assembly: AssemblyProduct("FlygplanX2000")]
+[assembly: AssemblyDescription("Ett flygplan rör sig och propellrar funkar inte")]
+[assembly: AssemblyCompany("Karl och Martin")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTrademark("KM(tm)")]
+[assembly: AssemblyCulture("PG3")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
