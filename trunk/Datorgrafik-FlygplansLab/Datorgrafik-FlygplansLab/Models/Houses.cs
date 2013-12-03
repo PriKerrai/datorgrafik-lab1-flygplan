@@ -17,7 +17,7 @@ namespace Datorgrafik_FlygplansLab.Models
         int[,] housePositions;
         List<VertexPositionColor> housesVertices = new List<VertexPositionColor>();
         private const int numberOfHouseColors = 3;
-        Color[] houseColors = new Color[numberOfHouseColors] { Color.LightGray, Color.LemonChiffon, Color.MediumAquamarine };
+        Color[] houseColors = new Color[numberOfHouseColors] { Color.Moccasin, Color.Thistle, Color.MediumAquamarine };
         Random random = new Random();
 
         public Houses(GraphicsDevice device)
