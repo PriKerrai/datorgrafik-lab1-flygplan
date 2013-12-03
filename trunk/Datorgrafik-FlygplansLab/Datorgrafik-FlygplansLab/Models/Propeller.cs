@@ -16,15 +16,26 @@ namespace Datorgrafik_FlygplansLab.Models
         public VertexPositionColor[] propellerVertices { get; set; }
         private float rotateSpeed = 0.05f;
         private float MoveSpeed = 1.5f;
+        private float scale = 15f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
-        public Vector3 propellerPosition;
+        public Vector3 position;
+        Matrix world;
         Matrix oldWorld;
 
         public Propeller(Game game)
         : base(game)
-        {
+        { }
 
+        public Propeller(Game game, Vector3 position, GraphicsDevice device)
+            : base(game)
+        {
+            this.device = device;
+            this.position = position;
+            world = Matrix.CreateTranslation(position);
+            game.Components.Add(this);
+            this.Enabled = true;
+            loadPropeller(device);
         }
 
         public void loadPropeller(GraphicsDevice graphicsDevice)
@@ -85,7 +96,11 @@ namespace Datorgrafik_FlygplansLab.Models
             //effect.World = rotationMatrix;
             oldWorld = effect.World;
 
-            Matrix propMatrix = oldWorld * Matrix.Identity * Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(propellerPosition);
+            Matrix translation = Matrix.CreateTranslation(position);
+            Matrix rotation = Matrix.CreateFromQuaternion(propellerRotation);
+            //Matrix scale = Matrix.CreateScale(scale, scale, scale);
+
+            Matrix propMatrix = Matrix.Identity * translation * rotation;
 
             effect.World = propMatrix;
             effect.View = camera.ViewMatrix;

@@ -23,16 +23,12 @@ namespace Datorgrafik_FlygplansLab
         Airplane airplane;
         Ground ground;
         Houses houses;
-        Propeller propellerLeft;
-        Propeller propellerRight;
         float gameSpeed = 1.0f;
 
         BasicEffect effect;
 
         Matrix worldTranslation = Matrix.Identity;
         Matrix worldRotation = Matrix.Identity;
-
-        //RasterizerState WIREFRAME_RASTERIZER_STATE = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
         public FlygplanX2000()
         {
@@ -58,18 +54,11 @@ namespace Datorgrafik_FlygplansLab
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             effect = new BasicEffect(GraphicsDevice);
             ground = new Ground(GraphicsDevice);
             houses = new Houses(GraphicsDevice);
-            airplane = new Airplane(this);
-            propellerLeft = new Propeller(this);
-            propellerRight = new Propeller(this);
+            airplane = new Airplane(this, GraphicsDevice);
 
-            
-            
-            
-            
             base.Initialize();
         }
 
@@ -85,20 +74,10 @@ namespace Datorgrafik_FlygplansLab
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 55, 55));
             effect.Projection = camera.ViewProjectionMatrix;
 
-            airplane.loadAirplane(GraphicsDevice);
-            propellerLeft.loadPropeller(GraphicsDevice);
-            propellerRight.loadPropeller(GraphicsDevice);
-
-            // add game components so that they update themselves
-            this.Components.Add(airplane);
-            this.Components.Add(propellerLeft);
-            this.Components.Add(propellerRight);
-
             // Set cullmode to none
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rs;
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -121,9 +100,7 @@ namespace Datorgrafik_FlygplansLab
             float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
             
             MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
-            //airplane.Update(gameTime);
-            //propellerLeft.Update(gameTime);
-            //propellerRight.Update(gameTime);
+
             camera.Update(airplane);
             base.Update(gameTime);
         }
@@ -158,8 +135,8 @@ namespace Datorgrafik_FlygplansLab
             ;
 
             airplane.airplaneRotation *= additionalRot;
-            propellerLeft.propellerRotation *= additionalRot;
-            propellerRight.propellerRotation *= additionalRot;
+            airplane.propLeft.propellerRotation *= additionalRot;
+            airplane.propRight.propellerRotation *= additionalRot;
         }
 
         private void MoveForward(ref Vector3 position, Quaternion rotationQuaternion, float speed)
@@ -182,19 +159,10 @@ namespace Datorgrafik_FlygplansLab
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
 
-            Vector3 proLeftPos = new Vector3(airplane.airplanePosition.X - 0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
-            propellerLeft.propellerPosition = proLeftPos;
-            Vector3 proRightPos = new Vector3(airplane.airplanePosition.X + 0.1f, airplane.airplanePosition.Y, airplane.airplanePosition.Z);
-            propellerRight.propellerPosition = proRightPos;
-
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-
-                propellerLeft.Draw(camera, effect);
-                propellerRight.Draw(camera, effect);
-
-                ground.Draw(camera, effect);
+                //ground.Draw(camera, effect);
                 airplane.Draw(camera, effect);
                 houses.Draw(camera, effect);
             }

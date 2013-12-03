@@ -20,10 +20,19 @@ namespace Datorgrafik_FlygplansLab.Models
         public Quaternion airplaneRotation = Quaternion.Identity;
         private float MoveSpeed = 1.5f;
 
-        public Airplane(Game game)
+        // skapa propellrar
+        public Propeller propLeft;
+        public Propeller propRight;
+
+
+
+        public Airplane(Game game, GraphicsDevice device)
             : base(game)
         {
-            
+            this.device = device;
+            loadAirplane(device);
+            game.Components.Add(this);
+            this.Enabled = true;
         }
 
         public void loadAirplane(GraphicsDevice graphicsDevice)
@@ -35,6 +44,13 @@ namespace Datorgrafik_FlygplansLab.Models
             airPlaneVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, airplaneVertices.Length, BufferUsage.WriteOnly);
             airPlaneVertexBuffer.SetData<VertexPositionColor>(airplaneVertices.ToArray());
 
+            // propeller positions
+            Vector3 propLeftPos = new Vector3(airplanePosition.X - 0.1f, airplanePosition.Y, airplanePosition.Z);
+            Vector3 propRightPos = new Vector3(airplanePosition.X + 0.1f, airplanePosition.Y, airplanePosition.Z);
+
+            // init propellers
+            propLeft = new Propeller(this.Game, propLeftPos, device);
+            propRight = new Propeller(this.Game, propRightPos, device);
         }
 
 
@@ -120,18 +136,26 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public void Draw(Camera camera, BasicEffect effect)
         {
+            
+
+            // skicka effect till propellrars draw
+
+
             effect.VertexColorEnabled = true;
 
             Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
             effect.World = worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
-            
+
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 device.SetVertexBuffer(airPlaneVertexBuffer);
                 device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplaneVertices, 0, 12);
+
+                propLeft.Draw(camera, effect);
+                propRight.Draw(camera, effect);
 
             }
         }
