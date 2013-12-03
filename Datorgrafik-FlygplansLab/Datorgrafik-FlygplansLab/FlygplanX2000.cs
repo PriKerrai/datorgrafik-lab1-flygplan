@@ -113,30 +113,28 @@ namespace Datorgrafik_FlygplansLab
             turningSpeed *= 1.6f * gameSpeed;
             KeyboardState keys = Keyboard.GetState();
             float yawRot = 0;
-            if (keys.IsKeyDown(Keys.R))
+            if (keys.IsKeyDown(Keys.Q))
                 yawRot += turningSpeed;
-            if (keys.IsKeyDown(Keys.F))
+            if (keys.IsKeyDown(Keys.E))
                 yawRot -= turningSpeed;
 
             float leftRightRot = 0;
-            if (keys.IsKeyDown(Keys.A))
-                leftRightRot += turningSpeed;
             if (keys.IsKeyDown(Keys.D))
+                leftRightRot += turningSpeed;
+            if (keys.IsKeyDown(Keys.A))
                 leftRightRot -= turningSpeed;
 
             float upDownRot = 0;
-            if (keys.IsKeyDown(Keys.S))
-                upDownRot += turningSpeed;
             if (keys.IsKeyDown(Keys.W))
+                upDownRot += turningSpeed;
+            if (keys.IsKeyDown(Keys.S))
                 upDownRot -= turningSpeed;
 
-            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) 
-                * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
-            ;
+            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
 
             airplane.airplaneRotation *= additionalRot;
-            airplane.propLeft.propellerRotation *= additionalRot;
-            airplane.propRight.propellerRotation *= additionalRot;
+            airplane.propLeft.additionalRot = additionalRot;
+            airplane.propRight.additionalRot = additionalRot;
         }
 
         private void MoveForward(ref Vector3 position, Quaternion rotationQuaternion, float speed)
@@ -159,13 +157,9 @@ namespace Datorgrafik_FlygplansLab
             effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
 
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                //ground.Draw(camera, effect);
-                airplane.Draw(camera, effect);
-                houses.Draw(camera, effect);
-            }
+            ground.Draw(camera, effect);
+            airplane.Draw(camera, effect);
+            houses.Draw(camera, effect);
 
             base.Draw(gameTime);
         }

@@ -12,8 +12,8 @@ namespace Datorgrafik_FlygplansLab.Models
         GraphicsDevice device;
         VertexBuffer groundBuffer;
 
-        public const int groundWidth = 50;
-        public const int groundHeight = 50;
+        public const int groundWidth = 100;
+        public const int groundHeight = 100;
         Color[] floorColors = new Color[2] { Color.White, Color.Black };
 
         public Ground(GraphicsDevice device)
