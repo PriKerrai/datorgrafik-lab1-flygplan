@@ -24,8 +24,6 @@ namespace Datorgrafik_FlygplansLab.Models
         public Propeller propLeft;
         public Propeller propRight;
 
-
-
         public Airplane(Game game, GraphicsDevice device)
             : base(game)
         {
@@ -134,19 +132,15 @@ namespace Datorgrafik_FlygplansLab.Models
             airplaneVertices[35] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
         }
 
-        public void Draw(Camera camera, BasicEffect effect)
+        public void Draw(BasicEffect effect)
         {
             
 
             // skicka effect till propellrars draw
-
-
             effect.VertexColorEnabled = true;
 
             Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
             effect.World *= worldMatrix;
-            effect.View = camera.ViewMatrix;
-            effect.Projection = camera.ViewProjectionMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -154,8 +148,8 @@ namespace Datorgrafik_FlygplansLab.Models
                 device.SetVertexBuffer(airPlaneVertexBuffer);
                 device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplaneVertices, 0, 12);
 
-                propLeft.Draw(camera, effect);
-                propRight.Draw(camera, effect);
+                propLeft.Draw(effect);
+                propRight.Draw(effect);
 
             }
         }
