@@ -81,7 +81,8 @@ namespace Datorgrafik_FlygplansLab
             soundeffectInstance.Play();
 
             MediaPlayer.Volume = 0.5f;
-
+            MediaPlayer.IsRepeating = true;
+            
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 55, 55));
             effect.Projection = camera.ViewProjectionMatrix;
 
