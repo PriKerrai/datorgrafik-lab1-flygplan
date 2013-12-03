@@ -43,23 +43,24 @@ namespace Datorgrafik_FlygplansLab
             this.farPlaneDistance = 100000f;
 
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 2, 1), new Vector3(0, 1, 0));
+            this.ViewMatrix = Matrix.CreateLookAt(this.Position, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, this.AspectRatio, this.nearPlaneDistance, this.farPlaneDistance);
         }
 
         public void Update(Airplane airplane) {
-            //this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
 
-
-            Vector3 campos = new Vector3(0, 0.15f, 0.5f);
-            campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(airplane.airplaneRotation));
+            Vector3 campos = new Vector3(0.1f, 0.15f, 0.5f);
+            campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(Rotation));
             campos += airplane.airplanePosition;
 
             Vector3 camup = new Vector3(0, 1, 0);
-            camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(airplane.airplaneRotation));
+            camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(Rotation));
 
-            this.ViewMatrix = Matrix.CreateLookAt(campos, airplane.airplanePosition, camup);
+            this.Position = campos;
+            this.UpDirection = camup;
+
+            this.ViewMatrix = Matrix.CreateLookAt(this.Position, airplane.airplanePosition, this.UpDirection);
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, AspectRatio, nearPlaneDistance, farPlaneDistance);
         }
 

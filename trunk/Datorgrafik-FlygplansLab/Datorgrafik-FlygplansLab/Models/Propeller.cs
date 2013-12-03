@@ -14,11 +14,12 @@ namespace Datorgrafik_FlygplansLab.Models
         private VertexBuffer propellerVertexBuffer;
 
         public VertexPositionColor[] propellerVertices { get; set; }
-        private float rotateSpeed = 0.05f;
-        private float MoveSpeed = 1.5f;
-        private float scale = 15f;
+        private float rotation = 0;
+        private float rotateSpeed = 1f;
+        private float scale = .05f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
+        public Quaternion additionalRot = Quaternion.Identity;
         public Vector3 position;
         Matrix world;
         Matrix oldWorld;
@@ -96,32 +97,33 @@ namespace Datorgrafik_FlygplansLab.Models
             //effect.World = rotationMatrix;
             oldWorld = effect.World;
 
-            Matrix translation = Matrix.CreateTranslation(position);
-            Matrix rotation = Matrix.CreateFromQuaternion(propellerRotation);
-            //Matrix scale = Matrix.CreateScale(scale, scale, scale);
-
-            Matrix propMatrix = Matrix.Identity * translation * rotation;
+            Matrix propMatrix = Matrix.CreateScale(scale, scale, scale) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(position);
 
             effect.World = propMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 
             // position propeller
+
   
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 device.SetVertexBuffer(propellerVertexBuffer);
                 device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, propellerVertices, 0, 12);
-
             }
         }
 
         public override void Update(GameTime gameTime)
         {
-            rotateSpeed += 0.7f;
+            rotation += rotateSpeed;
 
-            this.propellerRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rotateSpeed);
+            propellerRotation *= additionalRot;
+
+
+
+            this.propellerRotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, rotation);
+
 
             base.Update(gameTime);
 

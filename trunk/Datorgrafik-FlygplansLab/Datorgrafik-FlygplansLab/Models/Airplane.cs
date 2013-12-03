@@ -59,7 +59,7 @@ namespace Datorgrafik_FlygplansLab.Models
         {
             airplaneVertices = new VertexPositionColor[36];
 
-            Color colorNose = Color.White;
+            Color colorNose = Color.LightBlue;
             Color colorBody = Color.Black;
             Color colorWings = Color.Gray;
 
@@ -144,7 +144,7 @@ namespace Datorgrafik_FlygplansLab.Models
             effect.VertexColorEnabled = true;
 
             Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
-            effect.World = worldMatrix;
+            effect.World *= worldMatrix;
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ViewProjectionMatrix;
 
@@ -166,7 +166,13 @@ namespace Datorgrafik_FlygplansLab.Models
 
             Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), airplaneRotation);
             this.airplanePosition += addVector * distance;
-           
+
+            // propeller positions
+            Vector3 propLeftPos = new Vector3(airplanePosition.X - 0.1f, airplanePosition.Y, airplanePosition.Z);
+            propLeft.position = propLeftPos;
+            Vector3 propRightPos = new Vector3(airplanePosition.X + 0.1f, airplanePosition.Y, airplanePosition.Z);
+            propRight.position = propRightPos;
+
             base.Update(gameTime);
         }
     }
