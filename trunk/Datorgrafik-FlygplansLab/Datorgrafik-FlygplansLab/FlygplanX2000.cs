@@ -28,6 +28,8 @@ namespace Datorgrafik_FlygplansLab
 
         BasicEffect effect;
 
+        SoundEffect engineSound, backgroundMusic;
+        SoundEffectInstance soundeffectInstance, backgroundMusicInstance;
         public FlygplanX2000()
         {
 
@@ -69,6 +71,17 @@ namespace Datorgrafik_FlygplansLab
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
+            engineSound = Content.Load<SoundEffect>("Running");
+            Song song = Content.Load<Song>("1944 UST - Opening");
+            MediaPlayer.Play(song);
+            
+            soundeffectInstance = engineSound.CreateInstance();
+            soundeffectInstance.IsLooped = true;
+            soundeffectInstance.Volume = 0.3f;
+            soundeffectInstance.Play();
+
+            MediaPlayer.Volume = 0.5f;
+
             this.camera = new Camera(GraphicsDevice, new Vector3(0, 55, 55));
             effect.Projection = camera.ViewProjectionMatrix;
 
@@ -142,7 +155,7 @@ namespace Datorgrafik_FlygplansLab
 
         private void MoveForward(ref Vector3 position, Quaternion rotationQuaternion, float speed)
         {
-            Vector3 addVector = Vector3.Transform(new Vector3(1, 0, 0), rotationQuaternion);
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, 0), rotationQuaternion);
             position += addVector * speed;
         }
 
