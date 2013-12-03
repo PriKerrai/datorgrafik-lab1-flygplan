@@ -63,8 +63,9 @@ namespace Datorgrafik_FlygplansLab
         {
             frameCounter++;
 
-            string fps = string.Format("FPS: {0}", frameRate);
-
+            string fps = string.Format("FPS: {0}", frameRate 
+                                        + "\nStatic Camera: N  " + "Following Camera: B"
+                                        + "\nPitch: W/S " + " Roll: A/D " + "Yaw Q/E" );
             spriteBatch.Begin();
 
             spriteBatch.DrawString(spriteFont, fps, new Vector2(33, 33), Color.Black);

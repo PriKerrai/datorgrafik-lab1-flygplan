@@ -85,6 +85,36 @@ namespace Datorgrafik_FlygplansLab.Models
             propellerVertices[17] = new VertexPositionColor(new Vector3(.4f, -2.5f, 0), propellerThingy);
             propellerVertices[15] = new VertexPositionColor(new Vector3(-.6f, -2.5f, 0), propellerThingy);
             propellerVertices[16] = new VertexPositionColor(new Vector3(-.6f, -2f, 0), propellerThingy);
+
+            // BladeTop
+            propellerVertices[19] = new VertexPositionColor(new Vector3(.6f, 2, 0), propellerBlade);
+            propellerVertices[18] = new VertexPositionColor(new Vector3(0, 0, 0), propellerBlade);
+            propellerVertices[20] = new VertexPositionColor(new Vector3(-.6f, 2, 0), propellerBlade);
+
+            // BladeBot
+            propellerVertices[22] = new VertexPositionColor(new Vector3(-.6f, -2, 0), propellerBlade);
+            propellerVertices[21] = new VertexPositionColor(new Vector3(0, 0, 0), propellerBlade);
+            propellerVertices[23] = new VertexPositionColor(new Vector3(.6f, -2, 0), propellerBlade);
+
+            // ThingyOneTop
+            propellerVertices[26] = new VertexPositionColor(new Vector3(-.6f, 2, 0), propellerThingy);
+            propellerVertices[24] = new VertexPositionColor(new Vector3(.6f, 2, 0), propellerThingy);
+            propellerVertices[25] = new VertexPositionColor(new Vector3(.4f, 2.5f, 0), propellerThingy);
+
+            // ThingyTwoTop
+            propellerVertices[29] = new VertexPositionColor(new Vector3(.4f, 2.5f, 0), propellerThingy);
+            propellerVertices[27] = new VertexPositionColor(new Vector3(-.4f, 2.5f, 0), propellerThingy);
+            propellerVertices[28] = new VertexPositionColor(new Vector3(-.6f, 2, 0), propellerThingy);
+
+            // ThingyOneBot
+            propellerVertices[31] = new VertexPositionColor(new Vector3(-.6f, -2, 0), propellerThingy);
+            propellerVertices[30] = new VertexPositionColor(new Vector3(.6f, -2, 0), propellerThingy);
+            propellerVertices[32] = new VertexPositionColor(new Vector3(.4f, -2.5f, 0), propellerThingy);
+
+            // ThingyTwoBot
+            propellerVertices[34] = new VertexPositionColor(new Vector3(.4f, -2.5f, 0), propellerThingy);
+            propellerVertices[33] = new VertexPositionColor(new Vector3(-.6f, -2.5f, 0), propellerThingy);
+            propellerVertices[35] = new VertexPositionColor(new Vector3(-.6f, -2f, 0), propellerThingy);
         }
 
         public void Draw(BasicEffect effect)

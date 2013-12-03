@@ -34,8 +34,8 @@ namespace Datorgrafik_FlygplansLab
             graphics = new GraphicsDeviceManager(this);
         
             //MAX FPS SPEED WROOM
-            this.IsFixedTimeStep = false;
-            graphics.SynchronizeWithVerticalRetrace = false;
+            //this.IsFixedTimeStep = false;
+            //graphics.SynchronizeWithVerticalRetrace = false;
 
             graphics.PreferredBackBufferHeight = 768;
             graphics.PreferredBackBufferWidth = 1024;
@@ -129,7 +129,9 @@ namespace Datorgrafik_FlygplansLab
                 upDownRot -= turningSpeed;
 
             if (keys.IsKeyDown(Keys.B))
-                Debug.Write("Airplane Position: " + airplane.airplanePosition + "\n Propeller Position:   " + airplane.propLeft.position + "\n");
+                camera.Lerp = true;
+            if (keys.IsKeyDown(Keys.N))
+                camera.Lerp = false;
 
             Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
 
