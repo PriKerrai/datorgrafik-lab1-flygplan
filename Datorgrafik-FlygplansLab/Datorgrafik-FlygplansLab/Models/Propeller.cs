@@ -16,7 +16,7 @@ namespace Datorgrafik_FlygplansLab.Models
         public VertexPositionColor[] propellerVertices { get; set; }
         private float rotation = 0;
         private float rotateSpeed = 1f;
-        private float scale = .05f;
+        private float scale = .005f;
         
         public Quaternion propellerRotation = Quaternion.Identity;
         public Quaternion additionalRot = Quaternion.Identity;
