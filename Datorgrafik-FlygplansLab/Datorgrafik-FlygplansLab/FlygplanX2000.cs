@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Datorgrafik_FlygplansLab.Models;
+using System.Diagnostics;
 
 namespace Datorgrafik_FlygplansLab
 {
@@ -26,9 +27,6 @@ namespace Datorgrafik_FlygplansLab
         float gameSpeed = 1.0f;
 
         BasicEffect effect;
-
-        Matrix worldTranslation = Matrix.Identity;
-        Matrix worldRotation = Matrix.Identity;
 
         public FlygplanX2000()
         {
@@ -130,6 +128,9 @@ namespace Datorgrafik_FlygplansLab
             if (keys.IsKeyDown(Keys.S))
                 upDownRot -= turningSpeed;
 
+            if (keys.IsKeyDown(Keys.B))
+                Debug.Write("Airplane Position: " + airplane.airplanePosition + "\n Propeller Position:   " + airplane.propLeft.position + "\n");
+
             Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
 
             airplane.airplaneRotation *= additionalRot;
@@ -154,12 +155,11 @@ namespace Datorgrafik_FlygplansLab
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             effect.View = camera.ViewMatrix;
-            effect.World = worldRotation * worldTranslation;
             effect.VertexColorEnabled = true;
 
-            ground.Draw(camera, effect);
-            airplane.Draw(camera, effect);
-            houses.Draw(camera, effect);
+            ground.Draw(effect);
+            airplane.Draw(effect);
+            houses.Draw(effect);
 
             base.Draw(gameTime);
         }

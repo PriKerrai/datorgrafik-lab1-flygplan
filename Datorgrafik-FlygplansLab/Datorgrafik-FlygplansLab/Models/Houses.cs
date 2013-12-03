@@ -103,12 +103,10 @@ namespace Datorgrafik_FlygplansLab.Models
             return vList;
         }
 
-        public void Draw(Camera camera, BasicEffect effect)
+        public void Draw(BasicEffect effect)
         {
             effect.VertexColorEnabled = true;
             effect.World = Matrix.Identity;
-            effect.View = camera.ViewMatrix;
-            effect.Projection = camera.ViewProjectionMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
