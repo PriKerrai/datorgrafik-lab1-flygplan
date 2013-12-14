@@ -25,22 +25,20 @@ namespace Datorgrafik_FlygplansLab
         Ground ground;
         Houses houses;
         float gameSpeed = 1.0f;
-
         BasicEffect effect;
-
         SoundEffect engineSound, backgroundMusic;
         SoundEffectInstance soundeffectInstance, backgroundMusicInstance;
+        RasterizerState rs = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
+
         public FlygplanX2000()
         {
-
+            // graphics settings
             graphics = new GraphicsDeviceManager(this);
-        
-            //MAX FPS SPEED WROOM
             //this.IsFixedTimeStep = false;
             //graphics.SynchronizeWithVerticalRetrace = false;
-
-            graphics.PreferredBackBufferHeight = 768;
-            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.IsFullScreen = false;
 
             Components.Add(new FPS(this));
             Content.RootDirectory = "Content";
@@ -54,11 +52,6 @@ namespace Datorgrafik_FlygplansLab
         /// </summary>
         protected override void Initialize()
         {
-            effect = new BasicEffect(GraphicsDevice);
-            ground = new Ground(GraphicsDevice);
-            houses = new Houses(GraphicsDevice);
-            airplane = new Airplane(this, GraphicsDevice);
-
             base.Initialize();
         }
 
@@ -70,7 +63,11 @@ namespace Datorgrafik_FlygplansLab
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            effect = new BasicEffect(GraphicsDevice);
             
+
+            // setup sound
             engineSound = Content.Load<SoundEffect>("Running");
             Song song = Content.Load<Song>("1944 UST - Opening");
             MediaPlayer.Play(song);
@@ -83,13 +80,19 @@ namespace Datorgrafik_FlygplansLab
             MediaPlayer.Volume = 0.5f;
             MediaPlayer.IsRepeating = true;
             
-            this.camera = new Camera(GraphicsDevice, new Vector3(0, 55, 55));
+            // setup effect
+            this.camera = new Camera(GraphicsDevice, new Vector3(-10, 25, 10));
+            effect.VertexColorEnabled = true;
             effect.Projection = camera.ViewProjectionMatrix;
-
+            
             // Set cullmode to none
-            RasterizerState rs = new RasterizerState();
-            rs.CullMode = CullMode.None;
+            //rs.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rs;
+
+            // add objects
+            ground = new Ground(GraphicsDevice);
+            houses = new Houses(GraphicsDevice);
+            airplane = new Airplane(GraphicsDevice, new Vector3(25, 5, 25), .1f);
         }
 
         /// <summary>
@@ -109,21 +112,22 @@ namespace Datorgrafik_FlygplansLab
         protected override void Update(GameTime gameTime)
         {
             ProcessInput(gameTime);
-            float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
-            
-            MoveForward(ref airplane.airplanePosition, airplane.airplaneRotation, moveSpeed);
+            MoveAirPlane(gameTime);
 
+            airplane.Update(gameTime);
             camera.Update(airplane);
+
             base.Update(gameTime);
         }
 
         private void ProcessInput(GameTime gameTime)
         {
+            #region Controlling airplane
             
-
             float turningSpeed = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             turningSpeed *= 1.6f * gameSpeed;
             KeyboardState keys = Keyboard.GetState();
+
             float yawRot = 0;
             if (keys.IsKeyDown(Keys.Q))
                 yawRot += turningSpeed;
@@ -147,17 +151,20 @@ namespace Datorgrafik_FlygplansLab
             if (keys.IsKeyDown(Keys.N))
                 camera.Lerp = false;
 
-            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
+            Quaternion additionalRot = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), leftRightRot) 
+                                       * Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), upDownRot) 
+                                       * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), yawRot);
 
-            airplane.airplaneRotation *= additionalRot;
-            airplane.propLeft.additionalRot = additionalRot;
-            airplane.propRight.additionalRot = additionalRot;
+            airplane.Rotation *= additionalRot;
+
+            #endregion
         }
 
-        private void MoveForward(ref Vector3 position, Quaternion rotationQuaternion, float speed)
+        private void MoveAirPlane(GameTime gameTime)
         {
-            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, 0), rotationQuaternion);
-            position += addVector * speed;
+            float moveSpeed = gameTime.ElapsedGameTime.Milliseconds / 500.0f * gameSpeed;
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), airplane.Rotation);
+            airplane.Position += addVector * moveSpeed;
         }
 
         /// <summary>
@@ -171,10 +178,13 @@ namespace Datorgrafik_FlygplansLab
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             effect.View = camera.ViewMatrix;
-            effect.VertexColorEnabled = true;
+            effect.World = Matrix.Identity;
+            effect.CurrentTechnique.Passes[0].Apply();
+
+            Matrix identity = Matrix.Identity;
 
             ground.Draw(effect);
-            airplane.Draw(effect);
+            airplane.Draw(ref effect, ref identity);
             houses.Draw(effect);
 
             base.Draw(gameTime);

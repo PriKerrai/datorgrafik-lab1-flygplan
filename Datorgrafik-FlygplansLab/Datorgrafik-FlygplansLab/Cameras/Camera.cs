@@ -19,7 +19,6 @@ namespace Datorgrafik_FlygplansLab
     /// </summary>
     public class Camera
     {
-
         private GraphicsDevice device;
         public Vector3 Position { get; set; }
         public Quaternion Rotation { get; set; }
@@ -38,6 +37,7 @@ namespace Datorgrafik_FlygplansLab
             this.device = graphics;            
 
             //Settings
+            Lerp = true;
             this.AspectRatio = device.DisplayMode.AspectRatio;
             this.Position = startingPosition;
             this.nearPlaneDistance = 0.01f;
@@ -53,12 +53,12 @@ namespace Datorgrafik_FlygplansLab
 
             if (Lerp)
             {
-                this.Rotation = Quaternion.Lerp(this.Rotation, airplane.airplaneRotation, 0.1f);
+                this.Rotation = Quaternion.Lerp(this.Rotation, airplane.Rotation, 0.1f);
             }
-            
-            Vector3 campos = new Vector3(0f, 0.15f, 0.5f);
+
+            Vector3 campos = new Vector3(0f, 7.5f * airplane.Scale, 20f * airplane.Scale);
             campos = Vector3.Transform(campos, Matrix.CreateFromQuaternion(Rotation));
-            campos += airplane.airplanePosition;
+            campos += airplane.Position;
 
             Vector3 camup = new Vector3(0, 1, 0);
             camup = Vector3.Transform(camup, Matrix.CreateFromQuaternion(Rotation));
@@ -66,12 +66,9 @@ namespace Datorgrafik_FlygplansLab
             this.Position = campos;
             this.UpDirection = camup;
 
-            this.ViewMatrix = Matrix.CreateLookAt(this.Position, airplane.airplanePosition, this.UpDirection);
+            this.ViewMatrix = Matrix.CreateLookAt(this.Position, airplane.Position, this.UpDirection);
             this.ViewProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, AspectRatio, nearPlaneDistance, farPlaneDistance);
         }
-
-        
-
     }
 }
 

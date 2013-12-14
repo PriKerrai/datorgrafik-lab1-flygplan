@@ -8,54 +8,99 @@ using Microsoft.Xna.Framework;
 
 namespace Datorgrafik_FlygplansLab.Models
 {
-    public class Airplane : GameComponent
+    public class Airplane : GameObject
     {
+        float moveSpeed = 0.01f;
 
-        public VertexPositionColor[] airplaneVertices { get; set; }
-
-        private GraphicsDevice device;
-        private VertexBuffer airPlaneVertexBuffer;
-
-        public Vector3 airplanePosition = new Vector3(25, 6, 50);
-        public Quaternion airplaneRotation = Quaternion.Identity;
-        private float MoveSpeed = 1.5f;
-
-        // skapa propellrar
-        public Propeller propLeft;
-        public Propeller propRight;
-
-        public Airplane(Game game, GraphicsDevice device)
-            : base(game)
+        public Airplane(GraphicsDevice device, Vector3 pos, float scale)
+            : base(device, pos, Quaternion.Identity, scale)
         {
-            this.device = device;
-            loadAirplane(device);
-            game.Components.Add(this);
-            this.Enabled = true;
+            this.Scale = scale;
+            AddChild(new Propeller(this.device, new Vector3(-4f , 0f, 1f), 0.9f));
+            AddChild(new Propeller(this.device, new Vector3(4f, 0f, 1f), 0.9f));
         }
 
-        public void loadAirplane(GraphicsDevice graphicsDevice)
+        protected override void InitializeVertices()
         {
-            device = graphicsDevice;
+            #region old rotation
+            //vertices = new VertexPositionColor[36];
 
-            InitializeVertices();
+            //Color colorNose = Color.LightBlue;
+            //Color colorBody = Color.Black;
+            //Color colorWings = Color.Gray;
 
-            airPlaneVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, airplaneVertices.Length, BufferUsage.WriteOnly);
-            airPlaneVertexBuffer.SetData<VertexPositionColor>(airplaneVertices.ToArray());
+            //// left facing -----------
 
-            // propeller positions
-            Vector3 propLeftPos = new Vector3(airplanePosition.X - 0.1f, airplanePosition.Y, airplanePosition.Z);
-            Vector3 propRightPos = new Vector3(airplanePosition.X + 0.1f, airplanePosition.Y, airplanePosition.Z);
+            //// nose
+            //vertices[0] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
+            //vertices[1] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
+            //vertices[2] = new VertexPositionColor(new Vector3(-2, 1, 0), colorNose);
 
-            // init propellers
-            propLeft = new Propeller(this.Game, propLeftPos, device);
-            propRight = new Propeller(this.Game, propRightPos, device);
-        }
+            //// body
+            //vertices[3] = new VertexPositionColor(new Vector3(-2, 1, 0), colorBody);
+            //vertices[4] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
+            //vertices[5] = new VertexPositionColor(new Vector3(-2, -1, 2), colorBody);
+
+            //// rear wing
+            //vertices[6] = new VertexPositionColor(new Vector3(6, 3, 0), colorWings);
+            //vertices[7] = new VertexPositionColor(new Vector3(6, 1, 0), colorWings);
+            //vertices[8] = new VertexPositionColor(new Vector3(2, 1, 0), colorWings);
 
 
+            //// right facing -----------
 
-        public void InitializeVertices()
-        {
-            airplaneVertices = new VertexPositionColor[36];
+            //// nose
+            //vertices[9] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
+            //vertices[10] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            //vertices[11] = new VertexPositionColor(new Vector3(-2, 1, 0), colorNose);
+
+            //// body
+            //vertices[12] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
+            //vertices[13] = new VertexPositionColor(new Vector3(-2, 1, 0), colorBody);
+            //vertices[14] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
+
+            //// rear wing
+            //vertices[15] = new VertexPositionColor(new Vector3(6, 1, 0), colorWings);
+            //vertices[16] = new VertexPositionColor(new Vector3(6, 3, 0), colorWings);
+            //vertices[17] = new VertexPositionColor(new Vector3(2, 1, 0), colorWings);
+
+            //// bottom facing -----------
+
+            //// nose
+            //vertices[18] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
+            //vertices[19] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            //vertices[20] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
+
+            //// body
+            //vertices[21] = new VertexPositionColor(new Vector3(-2, -1, 2), colorBody);
+            //vertices[22] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
+            //vertices[23] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
+
+            //// Wing left
+            //vertices[24] = new VertexPositionColor(new Vector3(1, 0, 12), colorWings);
+            //vertices[25] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
+            //vertices[26] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+
+            //// Wing right
+            //vertices[27] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
+            //vertices[28] = new VertexPositionColor(new Vector3(1, 0, -12), colorWings);
+            //vertices[29] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+
+
+            //// top facing -----------
+
+            //// wing left
+            //vertices[30] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
+            //vertices[31] = new VertexPositionColor(new Vector3(1, 0, 12), colorWings);
+            //vertices[32] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+
+            //// Wing right
+            //vertices[33] = new VertexPositionColor(new Vector3(1, 0, -12), colorWings);
+            //vertices[34] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
+            //vertices[35] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+            #endregion
+
+            vertices = new VertexPositionColor[36];
 
             Color colorNose = Color.LightBlue;
             Color colorBody = Color.Black;
@@ -64,108 +109,85 @@ namespace Datorgrafik_FlygplansLab.Models
             // left facing -----------
 
             // nose
-            airplaneVertices[0] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
-            airplaneVertices[1] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
-            airplaneVertices[2] = new VertexPositionColor(new Vector3(-2, 1, 0), colorNose);
+            vertices[0] = new VertexPositionColor(new Vector3(0, -1, -6), colorNose);
+            vertices[1] = new VertexPositionColor(new Vector3(2, -1, -2), colorNose);
+            vertices[2] = new VertexPositionColor(new Vector3(0, 1, -2), colorNose);
 
             // body
-            airplaneVertices[3] = new VertexPositionColor(new Vector3(-2, 1, 0), colorBody);
-            airplaneVertices[4] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
-            airplaneVertices[5] = new VertexPositionColor(new Vector3(-2, -1, 2), colorBody);
+            vertices[3] = new VertexPositionColor(new Vector3(0, 1, 6), colorBody);
+            vertices[4] = new VertexPositionColor(new Vector3(0, 1, -2), colorBody);
+            vertices[5] = new VertexPositionColor(new Vector3(2, -1, -2), colorBody);
 
             // rear wing
-            airplaneVertices[6] = new VertexPositionColor(new Vector3(6, 3, 0), colorWings);
-            airplaneVertices[7] = new VertexPositionColor(new Vector3(6, 1, 0), colorWings);
-            airplaneVertices[8] = new VertexPositionColor(new Vector3(2, 1, 0), colorWings);
+            vertices[6] = new VertexPositionColor(new Vector3(0, 1, 6), colorWings);
+            vertices[7] = new VertexPositionColor(new Vector3(0, 3, 6), colorWings);
+            vertices[8] = new VertexPositionColor(new Vector3(0, 1, 2), colorWings);
 
 
             // right facing -----------
 
             // nose
-            airplaneVertices[9] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
-            airplaneVertices[10] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
-            airplaneVertices[11] = new VertexPositionColor(new Vector3(-2, 1, 0), colorNose);
+            vertices[9] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            vertices[10] = new VertexPositionColor(new Vector3(0, -1, -6), colorNose);
+            vertices[11] = new VertexPositionColor(new Vector3(0, 1, -2), colorNose);
 
             // body
-            airplaneVertices[12] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
-            airplaneVertices[13] = new VertexPositionColor(new Vector3(-2, 1, 0), colorBody);
-            airplaneVertices[14] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
+            vertices[12] = new VertexPositionColor(new Vector3(0, 1, -2), colorBody);
+            vertices[13] = new VertexPositionColor(new Vector3(0, 1, 6), colorBody);
+            vertices[14] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
 
             // rear wing
-            airplaneVertices[15] = new VertexPositionColor(new Vector3(6, 1, 0), colorWings);
-            airplaneVertices[16] = new VertexPositionColor(new Vector3(6, 3, 0), colorWings);
-            airplaneVertices[17] = new VertexPositionColor(new Vector3(2, 1, 0), colorWings);
+            vertices[15] = new VertexPositionColor(new Vector3(0, 3, 6), colorWings);
+            vertices[16] = new VertexPositionColor(new Vector3(0, 1, 6), colorWings);
+            vertices[17] = new VertexPositionColor(new Vector3(0, 1, 2), colorWings);
 
             // bottom facing -----------
 
             // nose
-            airplaneVertices[18] = new VertexPositionColor(new Vector3(-2, -1, 2), colorNose);
-            airplaneVertices[19] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
-            airplaneVertices[20] = new VertexPositionColor(new Vector3(-6, -1, 0), colorNose);
+            vertices[18] = new VertexPositionColor(new Vector3(-2, -1, -2), colorNose);
+            vertices[19] = new VertexPositionColor(new Vector3(2, -1, -2), colorNose);
+            vertices[20] = new VertexPositionColor(new Vector3(0, -1, -6), colorNose);
 
             // body
-            airplaneVertices[21] = new VertexPositionColor(new Vector3(-2, -1, 2), colorBody);
-            airplaneVertices[22] = new VertexPositionColor(new Vector3(6, 1, 0), colorBody);
-            airplaneVertices[23] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
+            vertices[21] = new VertexPositionColor(new Vector3(0, 1, 6), colorBody);
+            vertices[22] = new VertexPositionColor(new Vector3(2, -1, -2), colorBody);
+            vertices[23] = new VertexPositionColor(new Vector3(-2, -1, -2), colorBody);
 
             // Wing left
-            airplaneVertices[24] = new VertexPositionColor(new Vector3(1, 0, 12), colorWings);
-            airplaneVertices[25] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
-            airplaneVertices[26] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+            vertices[24] = new VertexPositionColor(new Vector3(0, 0, 1), colorWings);
+            vertices[25] = new VertexPositionColor(new Vector3(12, 0, 1), colorWings);
+            vertices[26] = new VertexPositionColor(new Vector3(0, 0, -1.5f), colorWings);
 
             // Wing right
-            airplaneVertices[27] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
-            airplaneVertices[28] = new VertexPositionColor(new Vector3(1, 0, -12), colorWings);
-            airplaneVertices[29] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+            vertices[27] = new VertexPositionColor(new Vector3(-12, 0, 1), colorWings);
+            vertices[28] = new VertexPositionColor(new Vector3(0, 0, 1), colorWings);
+            vertices[29] = new VertexPositionColor(new Vector3(0, 0, -1.5f), colorWings);
 
 
             // top facing -----------
 
             // wing left
-            airplaneVertices[30] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
-            airplaneVertices[31] = new VertexPositionColor(new Vector3(1, 0, 12), colorWings);
-            airplaneVertices[32] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+            vertices[30] = new VertexPositionColor(new Vector3(12, 0, 1), colorWings);
+            vertices[31] = new VertexPositionColor(new Vector3(0, 0, 1), colorWings);
+            vertices[32] = new VertexPositionColor(new Vector3(0, 0, -1.5f), colorWings);
 
             // Wing right
-            airplaneVertices[33] = new VertexPositionColor(new Vector3(1, 0, -12), colorWings);
-            airplaneVertices[34] = new VertexPositionColor(new Vector3(1, 0, 0), colorWings);
-            airplaneVertices[35] = new VertexPositionColor(new Vector3(-1.5f, 0, 0), colorWings);
+            vertices[33] = new VertexPositionColor(new Vector3(0, 0, 1), colorWings);
+            vertices[34] = new VertexPositionColor(new Vector3(-12, 0, 1), colorWings);
+            vertices[35] = new VertexPositionColor(new Vector3(0, 0, -1.5f), colorWings);
         }
 
-        public void Draw(BasicEffect effect)
+        public override void Draw(ref BasicEffect effect, ref Matrix parentWorld)
         {
-            
-
-            // skicka effect till propellrars draw
-            effect.VertexColorEnabled = true;
-
-            Matrix worldMatrix = Matrix.CreateScale(0.015f, 0.015f, 0.015f) * Matrix.CreateRotationY(MathHelper.ToRadians(270)) * Matrix.CreateFromQuaternion(airplaneRotation) * Matrix.CreateTranslation(airplanePosition);
-            effect.World *= worldMatrix;
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                device.SetVertexBuffer(airPlaneVertexBuffer);
-                device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, airplaneVertices, 0, 12);
-
-                propLeft.Draw(effect);
-                propRight.Draw(effect);
-
-            }
+            base.Draw(ref effect, ref parentWorld);
         }
 
         public override void Update(GameTime gameTime)
         {
-            float distance = (float)(this.MoveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
+            float distance = (float)(this.moveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
 
-            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, -1), airplaneRotation);
-            this.airplanePosition += addVector * distance;
-
-            // propeller positions
-            Vector3 propLeftPos = new Vector3(airplanePosition.X - 0.1f, airplanePosition.Y, airplanePosition.Z);
-            propLeft.position = propLeftPos;
-            Vector3 propRightPos = new Vector3(airplanePosition.X + 0.1f, airplanePosition.Y, airplanePosition.Z);
-            propRight.position = propRightPos;
+            Vector3 addVector = Vector3.Transform(new Vector3(0, 0, 1), Rotation);
+            Position += addVector * distance;
 
             base.Update(gameTime);
         }

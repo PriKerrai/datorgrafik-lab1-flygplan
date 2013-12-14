@@ -126,6 +126,7 @@
     <Compile Include="Cameras\Camera.cs" />
     <Compile Include="FPS.cs" />
     <Compile Include="Models\Airplane.cs" />
+    <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Ground.cs" />
     <Compile Include="Models\Houses.cs" />
     <Compile Include="Models\Propeller.cs" />
