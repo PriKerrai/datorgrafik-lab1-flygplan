@@ -26,8 +26,8 @@ namespace Datorgrafik_FlygplansLab
         Houses houses;
         float gameSpeed = 1.0f;
         BasicEffect effect;
-        SoundEffect engineSound, backgroundMusic;
-        SoundEffectInstance soundeffectInstance, backgroundMusicInstance;
+        SoundEffect engineSound;
+        SoundEffectInstance soundeffectInstance;
         RasterizerState rs = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace, FillMode = FillMode.Solid };
 
         public FlygplanX2000()

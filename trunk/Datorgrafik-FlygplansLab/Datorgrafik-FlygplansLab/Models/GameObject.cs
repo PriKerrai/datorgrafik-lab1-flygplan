@@ -38,12 +38,12 @@ namespace Datorgrafik_FlygplansLab
 
         public virtual void Draw(ref BasicEffect effect, ref Matrix parentWorld)
         {
-            Matrix newWorld = this.world * parentWorld;
+            Matrix newWorld = world * parentWorld;
             effect.World = newWorld;
             effect.CurrentTechnique.Passes[0].Apply();
 
-            this.device.SetVertexBuffer(this.vertexBuffer);
-            this.device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+            device.SetVertexBuffer(vertexBuffer);
+            device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
 
             foreach (GameObject child in children)
             {
@@ -53,7 +53,7 @@ namespace Datorgrafik_FlygplansLab
 
         public virtual void Update(GameTime gameTime)
         {
-            this.world = Matrix.Identity * Matrix.CreateScale(this.Scale) * Matrix.CreateFromQuaternion(this.Rotation) * Matrix.CreateTranslation(this.Position);
+            world = Matrix.Identity * Matrix.CreateScale(Scale) * Matrix.CreateFromQuaternion(Rotation) * Matrix.CreateTranslation(Position);
 
             foreach (GameObject child in children)
             {
@@ -63,7 +63,7 @@ namespace Datorgrafik_FlygplansLab
 
         public void AddChild(GameObject child)
         {
-            this.children.Add(child);
+            children.Add(child);
         }
 
     }

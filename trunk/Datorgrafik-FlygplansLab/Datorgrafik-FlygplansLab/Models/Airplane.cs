@@ -15,7 +15,7 @@ namespace Datorgrafik_FlygplansLab.Models
         public Airplane(GraphicsDevice device, Vector3 pos, float scale)
             : base(device, pos, Quaternion.Identity, scale)
         {
-            this.Scale = scale;
+            Scale = scale;
             AddChild(new Propeller(this.device, new Vector3(-4f , 0f, 1f), 0.9f));
             AddChild(new Propeller(this.device, new Vector3(4f, 0f, 1f), 0.9f));
         }
@@ -184,7 +184,7 @@ namespace Datorgrafik_FlygplansLab.Models
 
         public override void Update(GameTime gameTime)
         {
-            float distance = (float)(this.moveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
+            float distance = (float)(moveSpeed * gameTime.ElapsedGameTime.TotalSeconds);
 
             Vector3 addVector = Vector3.Transform(new Vector3(0, 0, 1), Rotation);
             Position += addVector * distance;
