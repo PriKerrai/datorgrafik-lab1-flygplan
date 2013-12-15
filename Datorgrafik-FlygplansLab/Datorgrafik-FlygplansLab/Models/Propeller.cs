@@ -84,32 +84,11 @@ namespace Datorgrafik_FlygplansLab.Models
             vertices[35] = new VertexPositionColor(new Vector3(-.6f, -2f, 0), propellerThingy);
         }
 
-        //public void Draw(BasicEffect effect)
-        //{
-        //    effect.VertexColorEnabled = true;
-
-        //    oldWorld = effect.World;
-
-        //    Matrix propMatrix = Matrix.CreateScale(scale, scale, scale) * Matrix.CreateFromQuaternion(propellerRotation) * Matrix.CreateTranslation(position);
-
-        //    effect.World = propMatrix;
-
-        //    // position propeller
-
-  
-        //    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-        //    {
-        //        pass.Apply();
-        //        device.SetVertexBuffer(propellerVertexBuffer);
-        //        device.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, 12);
-        //    }
-        //}
-
         public override void Update(GameTime gameTime)
         {
             propellerRotation += 0.75f;
 
-            this.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, propellerRotation);
+            Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, propellerRotation);
 
             base.Update(gameTime);
         }
